@@ -11,6 +11,11 @@ describe AccessGranted::Policy do
     @policy.roles.map(&:name).should include(:member)
   end
 
+  it "does not allow duplicate role names" do
+    @policy.role(:member, 1)
+    expect { @policy.role(:member, 1) }.to raise_error
+  end
+
   describe "#match_roles" do
     it "returns all matching roles in the order of priority" do
       user = double("User", is_moderator: true, is_admin: true)

@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
+require 'simplecov'
+SimpleCov.start
 require 'access_granted'
 require 'pry'
 

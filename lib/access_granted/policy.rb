@@ -2,7 +2,9 @@ module AccessGranted
   module Policy
     def role(name, priority = nil, conditions = nil, &block)
       name = name.to_sym
-      raise "Role '#{name}' already defined" if roles.select {|r| r.name == name }.any?
+      if roles.select {|r| r.name == name }.any?
+        raise "Role '#{name}' already defined"
+      end
       roles << Role.new(name, priority, conditions, block)
       roles.sort_by! {|r| - r.priority }
     end
