@@ -3,6 +3,14 @@ require 'spec_helper'
 describe AccessGranted::Role do
   subject { AccessGranted::Role }
 
+  it "requires a role name" do
+    expect { subject.new }.to raise_error
+  end
+
+  it "requires priority" do
+    expect { subject.new(:member) }.to raise_error
+  end
+
   it "creates a default role without conditions" do
     subject.new(:member, 1).conditions.should be_nil
   end
