@@ -6,7 +6,7 @@ Multi-role based authorization gem for Rails.
 
 Add this line to your application's Gemfile:
 
-    gem 'access_granted'
+    gem 'access-granted'
 
 And then execute:
 
@@ -14,7 +14,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install access_granted
+    $ gem install access-granted
 
 ## Usage
 
@@ -23,7 +23,7 @@ Example Policy class:
 ```ruby
 class Policy
   include AccessGranted::Policy
-  
+
   def configure(user)
     # applies to everyone logged in
     # second argument is priority
@@ -46,12 +46,12 @@ class Policy
       # modify user accounts
       can :edit, User
     end
-  
+
     role :admin, 3, {is_admin: true} do
       # overwrites every other permission of :moderators
       # and lets admin mamange everything
       can :manage, Post
-    end  
+    end
 end
 ```
 

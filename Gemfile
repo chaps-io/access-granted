@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in access_granted.gemspec
+# Specify your gem's dependencies in access-granted.gemspec
 gemspec
 
 group :test do
