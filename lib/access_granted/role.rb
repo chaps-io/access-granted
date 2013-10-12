@@ -12,7 +12,10 @@ module AccessGranted
     end
 
     def can(action, subject, conditions = {}, &block)
-      @permissions << Permission.new(action, subject, conditions, block)
+      actions = [action].flatten
+      actions.each do |a|
+        @permissions << Permission.new(a, subject, conditions, block)
+      end
     end
 
     def can?(action, subject)

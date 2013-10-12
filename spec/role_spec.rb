@@ -50,12 +50,19 @@ describe AccessGranted::Role do
     end
   end
 
-  describe "#can?" do
+  describe "#can" do
     before :each do
       @role = AccessGranted::Role.new(:member, 1)
     end
 
-    describe "no conditions given" do
+    describe "when action is an Array" do
+      it "creates multiple permissions" do
+        @role.can [:read, :create], String
+        @role.permissions.should have(2).items
+      end
+    end
+
+    describe "when no conditions given" do
       it "should be able to read a class" do
         @role.can :read, String
         @role.can?(:read, String).should be_true
@@ -67,7 +74,7 @@ describe AccessGranted::Role do
       end
     end
 
-    describe "conditions given" do
+    describe "when conditions given" do
       it "should be able to read when conditions match" do
         sub = double("Element", published: true)
         @role.can :read, sub.class, { published: true }
