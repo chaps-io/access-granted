@@ -6,6 +6,38 @@ describe AccessGranted::Policy do
     @policy.extend(AccessGranted::Policy)
   end
 
+  describe "#initialize" do
+    before :each do
+      @member = double("member",        is_moderator: false, is_admin: false)
+      @mod    = double("moderator",     is_moderator: true,  is_admin: false)
+      @admin  = double("administrator", is_moderator: false, is_admin: true)
+    end
+
+    it "selects permission based on role priority" do
+      klass = Class.new do
+        include AccessGranted::Policy
+
+        def configure(user)
+          role :member, 1 do
+            can :read, String
+          end
+
+          role :moderator, 2, { is_moderator: true } do
+            can :edit, String
+          end
+
+          role :administrator, 3, { is_admin: true } do
+            can :destroy, String
+          end
+        end
+      end
+      klass.new(@member).cannot?(:destroy, String).should be_true
+      klass.new(@admin).can?(:destroy, String).should     be_true
+      klass.new(@admin).can?(:read, String).should        be_true
+      klass.new(@mod).cannot?(:destroy, String).should    be_true
+    end
+  end
+
   describe "#role" do
     it "allows defining a default role" do
       @policy.role(:member, 1)
