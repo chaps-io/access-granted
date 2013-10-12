@@ -6,14 +6,24 @@ describe AccessGranted::Policy do
     @policy.extend(AccessGranted::Policy)
   end
 
-  it "allows defining a default role" do
-    @policy.role(:member, 1)
-    @policy.roles.map(&:name).should include(:member)
-  end
+  describe "#role" do
+    it "allows defining a default role" do
+      @policy.role(:member, 1)
+      @policy.roles.map(&:name).should include(:member)
+    end
 
-  it "does not allow duplicate role names" do
-    @policy.role(:member, 1)
-    expect { @policy.role(:member, 1) }.to raise_error
+    it "does not allow duplicate role names" do
+      @policy.role(:member, 1)
+      expect { @policy.role(:member, 1) }.to raise_error
+    end
+
+    it "allows nesting `can` calls inside a block" do
+      role = @policy.role(:member, 1) do
+        can :read, String
+      end
+
+      role.can?(:read, String).should be_true
+    end
   end
 
   describe "#match_roles" do

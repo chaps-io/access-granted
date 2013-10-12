@@ -8,6 +8,7 @@ module AccessGranted
       @conditions   = conditions
       @block        = block
       @permissions  = []
+      instance_eval(&@block) if @block
     end
 
     def can(action, subject, conditions = {}, &block)

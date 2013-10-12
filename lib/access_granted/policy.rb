@@ -5,8 +5,10 @@ module AccessGranted
       if roles.select {|r| r.name == name }.any?
         raise "Role '#{name}' already defined"
       end
-      roles << Role.new(name, priority, conditions, block)
+      r = Role.new(name, priority, conditions, block)
+      roles << r
       roles.sort_by! {|r| - r.priority }
+      r
     end
 
     def roles
