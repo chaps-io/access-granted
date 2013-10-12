@@ -2,14 +2,23 @@ module AccessGranted
   class Role
     attr_reader :name, :priority, :conditions, :permissions
 
-    def initialize(name, priority = nil, conditions = nil, block = nil)
-      raise(Error, "Name is required") if name.nil?
-      raise(Error, "Priority argument is required") if priority.nil?
+    def initialize(name, priority, conditions = nil, block = nil)
+      @name         = name
+      @priority     = priority
+      @conditions   = conditions
+      @block        = block
+      @permissions  = []
+    end
 
-      @name       = name
-      @priority   = priority
-      @conditions = conditions
-      @block      = block
+    def can(action, subject, conditions = {}, &block)
+      @permissions << Permission.new(action, subject, conditions, block)
+    end
+
+    def can?(action, subject)
+      match = relevant_permissions(action, subject).detect do |permission|
+        permission.matches_conditions?(subject)
+      end
+      match ? true : false
     end
 
     def applies_to?(user)
@@ -20,6 +29,13 @@ module AccessGranted
         @conditions.call(user)
       else
         true
+      end
+    end
+
+
+    def relevant_permissions(action, subject)
+      @permissions.select do |permission|
+        permission.relevant?(action, subject)
       end
     end
 
