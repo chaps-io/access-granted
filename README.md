@@ -18,7 +18,40 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Example Policy class:
+
+```ruby
+class Policy
+  include AccessGranted::Policy
+  
+  def init(user)
+    # applies to everyone logged in
+    role :member, 1 do
+      can :create, Post
+      can :delete, Post, user_id: user.id
+      can :edit, Post, user_id: user.id do |post|
+        # only if no one replied to the post
+        post.comments.empty?
+      end
+    end
+
+    # more complex logic to determine user's role
+    role :moderator, 2, proc {|u| u.moderator? } do
+      # overwrites permission that only allows removing own content in :member
+      # and lets moderators edit and delete all posts
+      can [:edit, :delete], Post
+      # and a new permission which lets moderators
+      # modify user accounts
+      can :edit, User
+    end
+  
+    role :admin, 3, {is_admin: true} do
+      # overwrites every other permission of :moderators
+      # and lets admin mamange everything
+      can :manage, Post
+    end  
+end
+```
 
 ## Contributing
 
