@@ -24,8 +24,10 @@ Example Policy class:
 class Policy
   include AccessGranted::Policy
   
-  def init(user)
+  def configure(user)
     # applies to everyone logged in
+    # second argument is priority
+    # the higher the number the more important the role
     role :member, 1 do
       can :create, Post
       can :delete, Post, user_id: user.id
