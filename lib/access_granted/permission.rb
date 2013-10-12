@@ -19,16 +19,7 @@ module AccessGranted
     end
 
     def matches_subject?(subject)
-      @subject == subject || matches_subject_class?(subject)
-    end
-
-    def matches_subject_class?(subject)
-      (subject.class.to_s == @subject.to_s ||
-        (
-          subject.kind_of?(Module) &&
-          subject.ancestors.include?(@subject)
-        )
-      )
+      @subject == subject || subject.class == @subject
     end
 
     def matches_conditions?(subject)

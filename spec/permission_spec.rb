@@ -42,15 +42,15 @@ describe AccessGranted::Permission do
     end
   end
 
-  describe "#matches_subject_class?" do
-    it "matches when comparing classes" do
+  describe "#matches_subject?" do
+    it "matches if subjects are identical" do
       perm = subject.new(:read, String)
-      perm.matches_subject_class?(String).should be_true
+      expect(perm.matches_subject? String).to be_true
     end
 
-    it "matches when comparing instance with its class" do
+    it "matches if class is equal to subject" do
       perm = subject.new(:read, String)
-      perm.matches_subject_class?("123").should be_true
+      expect(perm.matches_subject? "test").to be_true
     end
   end
 

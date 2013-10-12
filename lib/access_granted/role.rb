@@ -8,6 +8,7 @@ module AccessGranted
       @conditions   = conditions
       @block        = block
       @permissions  = []
+      @permissions_by_action = {}
       instance_eval(&@block) if @block
     end
 
@@ -15,6 +16,8 @@ module AccessGranted
       actions = [action].flatten
       actions.each do |a|
         @permissions << Permission.new(a, subject, conditions, block)
+        @permissions_by_action[a] ||= []
+        @permissions_by_action[a]  << @permissions.size - 1
       end
     end
 
@@ -38,9 +41,14 @@ module AccessGranted
 
 
     def relevant_permissions(action, subject)
-      @permissions.select do |permission|
-        permission.relevant?(action, subject)
+      results = []
+
+      (@permissions_by_action[action] || []).each do |index|
+        perm = @permissions[index]
+        perm.matches_subject?(subject) && results << perm
       end
+
+      results
     end
 
     def matches_hash(user, conditions = {})
