@@ -32,7 +32,6 @@ class Policy
       can :create, Post
       can :delete, Post, user_id: user.id
       can :edit, Post, user_id: user.id do |post|
-        # only if no one replied to the post
         post.comments.empty?
       end
     end
@@ -42,15 +41,25 @@ class Policy
       # overwrites permission that only allows removing own content in :member
       # and lets moderators edit and delete all posts
       can [:edit, :delete], Post
+
       # and a new permission which lets moderators
       # modify user accounts
       can :edit, User
     end
 
-    role :admin, 3, {is_admin: true} do
+    role :admin, 3, { is_admin: true } do
       # overwrites every other permission of :moderators
       # and lets admin mamange everything
-      can :manage, Post
+      can [:create, :edit, :destroy], Post
+      can [:create, :edit, :destroy], Comment
+    end
+
+    # the most important role prohibiting banned
+    # users from doing anything
+    # (even if they are for moderators or admins)
+    role :banned, 10 { is_banned: true } do
+      cannot [:create, :edit, :destroy], Post
+      cannot [:create, :edit, :destroy], Comment
     end
 end
 ```
