@@ -65,6 +65,7 @@ class Policy
       cannot [:create, :edit, :destroy], Post
       cannot [:create, :edit, :destroy], Comment
     end
+  end
 end
 ```
 
