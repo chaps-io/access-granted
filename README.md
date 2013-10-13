@@ -30,9 +30,13 @@ class Policy
     # the higher the number the more important the role
     role :member, 1 do
       can :create, Post
-      can :delete, Post, user_id: user.id
-      can :edit, Post, user_id: user.id do |post|
-        post.comments.empty?
+
+      # For more advanced permissions
+      # you must use blocks. Hash
+      # conditions should be used for
+      # simple checks only.
+      can [:edit, :destroy], Post do |post|
+        post.user_id == user.id && post.comments.empty?
       end
     end
 
