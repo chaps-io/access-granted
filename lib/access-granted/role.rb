@@ -15,6 +15,7 @@ module AccessGranted
     def can(action, subject, conditions = {}, &block)
       actions = [action].flatten
       actions.each do |a|
+        raise DuplicateRole if relevant_permissions(a, subject).any?
         @permissions << Permission.new(a, subject, conditions, block)
         @permissions_by_action[a] ||= []
         @permissions_by_action[a]  << @permissions.size - 1
@@ -45,7 +46,9 @@ module AccessGranted
 
       (@permissions_by_action[action] || []).each do |index|
         perm = @permissions[index]
-        perm.matches_subject?(subject) && results << perm
+        if perm.matches_subject?(subject)
+          results << perm
+        end
       end
 
       results

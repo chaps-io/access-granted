@@ -55,6 +55,11 @@ describe AccessGranted::Role do
       @role = AccessGranted::Role.new(:member, 1)
     end
 
+    it "forbids creating actions with the same name" do
+      @role.can :read, String
+      expect { @role.can :read, String }.to raise_error AccessGranted::DuplicateRole
+    end
+
     describe "when action is an Array" do
       it "creates multiple permissions" do
         @role.can [:read, :create], String
