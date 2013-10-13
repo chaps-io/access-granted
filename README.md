@@ -44,26 +44,29 @@ class Policy
     role :moderator, 2, proc {|u| u.moderator? } do
       # overwrites permission that only allows removing own content in :member
       # and lets moderators edit and delete all posts
-      can [:edit, :delete], Post
+      can [:update, :destroy], Post
 
       # and a new permission which lets moderators
       # modify user accounts
-      can :edit, User
+      can :update, User
     end
 
     role :admin, 3, { is_admin: true } do
       # overwrites every other permission of :moderators
       # and lets admin mamange everything
-      can [:create, :edit, :destroy], Post
-      can [:create, :edit, :destroy], Comment
+      can :manage, Post
+      can :manage, Comment
     end
 
     # the most important role prohibiting banned
     # users from doing anything
     # (even if they are moderators or admins)
     role :banned, 10 { is_banned: true } do
-      cannot [:create, :edit, :destroy], Post
-      cannot [:create, :edit, :destroy], Comment
+      cannot [:create, :update, :destroy], Post
+
+      # same as above, :manage is just a shortcut for
+      # `[:create, :update, :destroy]`
+      cannot :manage, Comment
     end
   end
 end
