@@ -60,6 +60,11 @@ describe AccessGranted::Role do
       expect { @role.can :read, String }.to raise_error AccessGranted::DuplicateRole
     end
 
+    it "accepts :manage shortcut for CRUD actions" do
+      @role.can :manage, String
+      @role.permissions.map(&:action).should include(:create, :update, :destroy)
+    end
+
     describe "when action is an Array" do
       it "creates multiple permissions" do
         @role.can [:read, :create], String

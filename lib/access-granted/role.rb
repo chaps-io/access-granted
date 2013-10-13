@@ -65,7 +65,12 @@ module AccessGranted
     end
 
     def add_permission(granted, action, subject, conditions, block)
-      actions = [action].flatten
+      if action == :manage
+        actions = [:create, :update, :destroy]
+      else
+        actions = [action].flatten
+      end
+
       actions.each do |a|
         raise DuplicateRole if relevant_permissions(a, subject).any?
         @permissions << Permission.new(granted, a, subject, conditions, block)
