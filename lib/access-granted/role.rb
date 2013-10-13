@@ -22,7 +22,7 @@ module AccessGranted
 
     def can?(action, subject)
       match = find_permission(action, subject)
-      match ? match.allowed : false
+      match ? match.granted : false
     end
 
     def find_permission(action, subject)
@@ -64,11 +64,11 @@ module AccessGranted
       true
     end
 
-    def add_permission(allowed, action, subject, conditions, block)
+    def add_permission(granted, action, subject, conditions, block)
       actions = [action].flatten
       actions.each do |a|
         raise DuplicateRole if relevant_permissions(a, subject).any?
-        @permissions << Permission.new(allowed, a, subject, conditions, block)
+        @permissions << Permission.new(granted, a, subject, conditions, block)
         @permissions_by_action[a] ||= []
         @permissions_by_action[a]  << @permissions.size - 1
       end

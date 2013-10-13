@@ -1,10 +1,10 @@
 module AccessGranted
   class Permission
-    attr_reader :action, :subject, :allowed, :conditions
+    attr_reader :action, :subject, :granted, :conditions
 
-    def initialize(allowed, action, subject, conditions = {}, block = nil)
+    def initialize(granted, action, subject, conditions = {}, block = nil)
       @action     = action
-      @allowed    = allowed
+      @granted    = granted
       @subject    = subject
       @conditions = conditions
       @block      = block
@@ -46,7 +46,7 @@ module AccessGranted
       other.class == self.class &&
         @action   == other.action &&
         @subject  == other.subject &&
-        @allowed  == other.allowed
+        @granted  == other.granted
     end
 
     def ==(other)

@@ -28,7 +28,7 @@ module AccessGranted
       match_roles(@user).each do |role|
         permission = role.find_permission(action, subject)
         if permission
-          return permission.allowed
+          return permission.granted
         end
       end
       false
