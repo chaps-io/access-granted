@@ -26,7 +26,10 @@ module AccessGranted
 
     def can?(action, subject)
       match_roles(@user).each do |role|
-        return true if role.can?(action, subject)
+        permission = role.find_permission(action, subject)
+        if permission
+          return role.can?(action, subject)
+        end
       end
       false
     end

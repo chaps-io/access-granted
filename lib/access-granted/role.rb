@@ -13,20 +13,22 @@ module AccessGranted
     end
 
     def can(action, subject, conditions = {}, &block)
-      actions = [action].flatten
-      actions.each do |a|
-        raise DuplicateRole if relevant_permissions(a, subject).any?
-        @permissions << Permission.new(a, subject, conditions, block)
-        @permissions_by_action[a] ||= []
-        @permissions_by_action[a]  << @permissions.size - 1
-      end
+      add_permission(true, action, subject, conditions, block)
+    end
+
+    def cannot(action, subject, conditions = {}, &block)
+      add_permission(false, action, subject, conditions, block)
     end
 
     def can?(action, subject)
-      match = relevant_permissions(action, subject).detect do |permission|
+      match = find_permission(action, subject)
+      match ? match.allowed : false
+    end
+
+    def find_permission(action, subject)
+      relevant_permissions(action, subject).detect do |permission|
         permission.matches_conditions?(subject)
       end
-      match ? true : false
     end
 
     def applies_to?(user)
@@ -60,6 +62,16 @@ module AccessGranted
         return false if attribute != value
       end
       true
+    end
+
+    def add_permission(allowed, action, subject, conditions, block)
+      actions = [action].flatten
+      actions.each do |a|
+        raise DuplicateRole if relevant_permissions(a, subject).any?
+        @permissions << Permission.new(allowed, a, subject, conditions, block)
+        @permissions_by_action[a] ||= []
+        @permissions_by_action[a]  << @permissions.size - 1
+      end
     end
   end
 end

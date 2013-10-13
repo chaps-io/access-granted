@@ -20,7 +20,7 @@ describe AccessGranted::Role do
       role = subject.new(:member, 1)
       role.can :read, String
       role.can :read, Hash
-      role.relevant_permissions(:read, String).should == [AccessGranted::Permission.new(:read, String)]
+      role.relevant_permissions(:read, String).should == [AccessGranted::Permission.new(true, :read, String)]
     end
   end
 

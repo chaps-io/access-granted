@@ -6,11 +6,12 @@ describe AccessGranted::Policy do
     @policy.extend(AccessGranted::Policy)
   end
 
-  describe "#initialize" do
+  describe "#configure" do
     before :each do
-      @member = double("member",        is_moderator: false, is_admin: false)
-      @mod    = double("moderator",     is_moderator: true,  is_admin: false)
-      @admin  = double("administrator", is_moderator: false, is_admin: true)
+      @member = double("member",        is_moderator: false, is_admin: false, is_banned: false)
+      @mod    = double("moderator",     is_moderator: true,  is_admin: false, is_banned: false)
+      @admin  = double("administrator", is_moderator: false, is_admin: true, is_banned: false)
+      @banned = double("administrator", is_moderator: false, is_admin: true, is_banned: true)
     end
 
     it "selects permission based on role priority" do
@@ -35,6 +36,26 @@ describe AccessGranted::Policy do
       klass.new(@admin).can?(:destroy, String).should     be_true
       klass.new(@admin).can?(:read, String).should        be_true
       klass.new(@mod).cannot?(:destroy, String).should    be_true
+    end
+
+    describe "#cannot" do
+      it "forbids action when used in higher role" do
+        klass = Class.new do
+          include AccessGranted::Policy
+
+          def configure(user)
+            role :member, 1 do
+              can :create, String
+            end
+
+            role :banned, 2, { is_banned: true } do
+              cannot :create, String
+            end
+          end
+        end
+        klass.new(@member).can?(:create, String).should be_true
+        klass.new(@banned).can?(:create, String).should be_false
+      end
     end
   end
 
