@@ -56,7 +56,7 @@ class Policy
 
     # the most important role prohibiting banned
     # users from doing anything
-    # (even if they are for moderators or admins)
+    # (even if they are moderators or admins)
     role :banned, 10 { is_banned: true } do
       cannot [:create, :edit, :destroy], Post
       cannot [:create, :edit, :destroy], Comment
