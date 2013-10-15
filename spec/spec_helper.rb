@@ -2,7 +2,6 @@ require 'rubygems'
 require 'bundler/setup'
 require 'simplecov'
 SimpleCov.start
-require 'access-granted'
 require 'pry'
 
 RSpec.configure do |config|
@@ -12,3 +11,16 @@ RSpec.configure do |config|
 
   config.order = 'random'
 end
+
+module ActionController
+  class Base
+    def self.helper_method(*args)
+    end
+  end
+end
+require 'access-granted'
+
+class Policy
+  include AccessGranted::Policy
+end
+

@@ -45,5 +45,12 @@ module AccessGranted
       end
       return matching_roles
     end
+
+    def authorize!(action, subject)
+      if cannot?(action, subject)
+        raise AccessDenied
+      end
+      subject
+    end
   end
 end
