@@ -1,15 +1,23 @@
 module AccessGranted
   class Role
-    attr_reader :name, :priority, :conditions, :permissions
+    attr_reader :name, :user, :priority, :conditions, :permissions
 
-    def initialize(name, priority, conditions = nil, block = nil)
+    def initialize(name, priority, conditions = nil, user = nil, block = nil)
+      @user         = user
       @name         = name
       @priority     = priority
       @conditions   = conditions
       @block        = block
       @permissions  = []
       @permissions_by_action = {}
-      instance_eval(&@block) if @block
+      if @block
+        instance_eval(&@block)
+      else
+        configure(@user)
+      end
+    end
+
+    def configure(user)
     end
 
     def can(action, subject, conditions = {}, &block)

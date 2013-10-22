@@ -9,12 +9,16 @@ module AccessGranted
     def configure(user)
     end
 
-    def role(name, priority = nil, conditions = nil, &block)
+    def role(name, priority = nil, conditions_or_klass = nil, conditions = nil, &block)
       name = name.to_sym
       if roles.select {|r| r.name == name }.any?
         raise "Role '#{name}' already defined"
       end
-      r = Role.new(name, priority, conditions, block)
+      if conditions_or_klass.is_a?(Class) && conditions_or_klass <= AccessGranted::Role
+        r = conditions_or_klass.new(name, priority, conditions, @user, block)
+      else
+        r = Role.new(name, priority, conditions_or_klass, @user, block)
+      end
       roles << r
       roles.sort_by! {|r| - r.priority }
       r
