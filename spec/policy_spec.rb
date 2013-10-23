@@ -77,7 +77,7 @@ describe AccessGranted::Policy do
 
     it "does not allow duplicate role names" do
       @policy.role(:member, 1)
-      expect { @policy.role(:member, 1) }.to raise_error
+      expect { @policy.role(:member, 1) }.to raise_error AccessGranted::DuplicateRole
     end
 
     it "allows nesting `can` calls inside a block" do

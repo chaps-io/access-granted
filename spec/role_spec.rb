@@ -57,7 +57,7 @@ describe AccessGranted::Role do
 
     it "forbids creating actions with the same name" do
       @role.can :read, String
-      expect { @role.can :read, String }.to raise_error AccessGranted::DuplicateRole
+      expect { @role.can :read, String }.to raise_error AccessGranted::DuplicatePermission
     end
 
     it "accepts :manage shortcut for CRUD actions" do

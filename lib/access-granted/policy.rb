@@ -12,7 +12,7 @@ module AccessGranted
     def role(name, priority = nil, conditions_or_klass = nil, conditions = nil, &block)
       name = name.to_sym
       if roles.select {|r| r.name == name }.any?
-        raise "Role '#{name}' already defined"
+        raise DuplicateRole, "Role '#{name}' already defined"
       end
       if conditions_or_klass.is_a?(Class) && conditions_or_klass <= AccessGranted::Role
         r = conditions_or_klass.new(name, priority, conditions, @user, block)

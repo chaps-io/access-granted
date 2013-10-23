@@ -80,7 +80,7 @@ module AccessGranted
       end
 
       actions.each do |a|
-        raise DuplicateRole if relevant_permissions(a, subject).any?
+        raise DuplicatePermission if relevant_permissions(a, subject).any?
         @permissions << Permission.new(granted, a, subject, conditions, block)
         @permissions_by_action[a] ||= []
         @permissions_by_action[a]  << @permissions.size - 1
