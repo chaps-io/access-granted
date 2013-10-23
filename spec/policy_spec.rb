@@ -67,6 +67,7 @@ describe AccessGranted::Policy do
         end
       end
       @policy.role(:member, 1, klass_role)
+      @policy.roles.first.class.should == klass_role
     end
 
     it "allows defining a default role" do
