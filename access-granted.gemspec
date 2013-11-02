@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Piotrek Okoński"]
   spec.email         = ["piotrek@okonski.org"]
   spec.description   = %q{Role based authorization gem}
-  spec.summary       = spec.summary
+  spec.summary       = %q{Elegant whitelist and role based authorization with ability to prioritize roles.}
   spec.homepage      = "https://github.com/pokonski/access-granted"
   spec.license       = "MIT"
 
@@ -22,4 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "pry"
+  spec.add_development_dependency "text-table"
 end
