@@ -66,8 +66,7 @@ module AccessGranted
 
     def matches_hash(user, conditions = {})
       conditions.each_pair do |name, value|
-        attribute = user.send(name)
-        return false if attribute != value
+        return false if user.send(name) != value
       end
       true
     end

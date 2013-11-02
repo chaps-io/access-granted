@@ -1,39 +1,37 @@
 module AccessGranted
   module Policy
+    attr_accessor :roles
 
     def initialize(user)
-      @user = user
+      @user          = user
+      @roles         = []
+      @last_priority = 0
       configure(@user)
     end
 
     def configure(user)
     end
 
-    def role(name, priority = nil, conditions_or_klass = nil, conditions = nil, &block)
+    def role(name, conditions_or_klass = nil, conditions = nil, &block)
       name = name.to_sym
       if roles.select {|r| r.name == name }.any?
         raise DuplicateRole, "Role '#{name}' already defined"
       end
-      if conditions_or_klass.is_a?(Class) && conditions_or_klass <= AccessGranted::Role
-        r = conditions_or_klass.new(name, priority, conditions, @user, block)
+      @last_priority += 1
+      r = if conditions_or_klass.is_a?(Class) && conditions_or_klass <= AccessGranted::Role
+        conditions_or_klass.new(name, @last_priority, conditions, @user, block)
       else
-        r = Role.new(name, priority, conditions_or_klass, @user, block)
+        Role.new(name, @last_priority, conditions_or_klass, @user, block)
       end
       roles << r
-      roles.sort_by! {|r| - r.priority }
+      roles.sort_by! {|r|  r.priority }
       r
-    end
-
-    def roles
-      @roles ||= []
     end
 
     def can?(action, subject)
       match_roles(@user).each do |role|
         permission = role.find_permission(action, subject)
-        if permission
-          return permission.granted
-        end
+        return permission.granted if permission
       end
       false
     end
@@ -43,11 +41,9 @@ module AccessGranted
     end
 
     def match_roles(user)
-      matching_roles = []
-      roles.each do |role|
-        matching_roles << role if role.applies_to?(user)
+      roles.select do |role|
+        role.applies_to?(user)
       end
-      return matching_roles
     end
 
     def authorize!(action, subject)

@@ -53,16 +53,4 @@ describe AccessGranted::Permission do
       expect(perm.matches_subject? "test").to be_true
     end
   end
-
-  describe "#relevant?" do
-    it "matches subject by class" do
-      perm = subject.new(true, :read, String)
-      perm.relevant?(:read, String).should be_true
-    end
-
-    it "matches subject by instance" do
-      perm = subject.new(true, :read, String)
-      perm.relevant?(:read, "text").should be_true
-    end
-  end
 end

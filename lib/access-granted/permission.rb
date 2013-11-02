@@ -10,11 +10,6 @@ module AccessGranted
       @block      = block
     end
 
-
-    def relevant?(action, subject)
-      matches_action?(action) && matches_subject?(subject)
-    end
-
     def matches_action?(action)
       @action == action
     end
@@ -32,12 +27,8 @@ module AccessGranted
     end
 
     def matches_hash_conditions?(subject)
-      if @conditions.empty?
-        return true
-      end
       @conditions.each_pair do |name, value|
-        attribute = subject.send(name)
-        return false if attribute != value
+        return false if subject.send(name) != value
       end
       true
     end
@@ -45,8 +36,8 @@ module AccessGranted
     def eql?(other)
       other.class == self.class &&
         @action   == other.action &&
-        @subject  == other.subject &&
-        @granted  == other.granted
+          @subject  == other.subject &&
+            @granted  == other.granted
     end
 
     def ==(other)
