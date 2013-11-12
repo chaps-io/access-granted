@@ -41,7 +41,7 @@ class Policy
     end
 
     # more complex logic to determine user's role
-    role :moderator, 2, proc {|u| u.moderator? } do
+    role :moderator, proc {|u| u.moderator? } do
       # overwrites permission that only allows removing own content in :member
       # and lets moderators edit and delete all posts
       can [:update, :destroy], Post
@@ -51,7 +51,7 @@ class Policy
       can :update, User
     end
 
-    role :admin, 3, { is_admin: true } do
+    role :admin, { is_admin: true } do
       # overwrites every other permission of :moderators
       # and lets admin mamange everything
       can :manage, Post
@@ -61,7 +61,7 @@ class Policy
     # the most important role prohibiting banned
     # users from doing anything
     # (even if they are moderators or admins)
-    role :banned, 10 { is_banned: true } do
+    role :banned, { is_banned: true } do
       cannot [:create, :update, :destroy], Post
 
       # same as above, :manage is just a shortcut for
