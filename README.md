@@ -1,6 +1,18 @@
 # AccessGranted [![Build Status](https://travis-ci.org/pokonski/access-granted.png?branch=master)](https://travis-ci.org/pokonski/access-granted) [![Code Climate](https://codeclimate.com/github/pokonski/access-granted.png)](https://codeclimate.com/github/pokonski/access-granted)
 
-Multi-role based authorization gem for Rails.
+Multi-role and whitelist based authorization gem for Rails. Solves two major issues with CanCan:
+
+1. built-in support for roles 
+  Easy to read acess policy code where permissions are cleanly grouped into roles which may or may not apply to a user.
+  Additionally permissions are forced to be unique in the scope a role greatly simplifying the
+  permission resolving and extremely reducing the code-base.
+
+2. white-list based
+
+  This means that you define what a role **can** do, 
+  not overidding permissions with `cannot` in a specific order which results in an ugly and unmaintainable code.
+  
+See [Usage](#usage) for an example of a complete AccessPolicy file.
 
 ## Installation
 
@@ -28,7 +40,7 @@ class Policy
     # applies to everyone logged in
     # second argument is priority
     # the higher the number the more important the role
-    role :member, 1 do
+    role :member do
       can :create, Post
 
       # For more advanced permissions
