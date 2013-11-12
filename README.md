@@ -1,8 +1,13 @@
 # AccessGranted [![Build Status](https://travis-ci.org/pokonski/access-granted.png?branch=master)](https://travis-ci.org/pokonski/access-granted) [![Code Climate](https://codeclimate.com/github/pokonski/access-granted.png)](https://codeclimate.com/github/pokonski/access-granted)
 
-Multi-role and whitelist based authorization gem for Rails. Solves two major issues with CanCan:
+Multi-role and whitelist based authorization gem for Rails. And it's lightweight (~300 lines of code)!
 
-1. built-in support for roles 
+# Summary
+
+AccessGranted is meant as replacement for CanCan to solve three major problems:
+
+1. built-in support for roles
+
   Easy to read acess policy code where permissions are cleanly grouped into roles which may or may not apply to a user.
   Additionally permissions are forced to be unique in the scope a role greatly simplifying the
   permission resolving and extremely reducing the code-base.
@@ -11,9 +16,26 @@ Multi-role and whitelist based authorization gem for Rails. Solves two major iss
 
   This means that you define what a role **can** do, 
   not overidding permissions with `cannot` in a specific order which results in an ugly and unmaintainable code.
-  
+
+3. Permissions can work on basically any object and AccessGranted is framework-agnostic,
+   (the only Rails-specific methods are `can?`/`cannot?`/`authorize!` helpers injected 
+   into the framework only when it's present).
+
 See [Usage](#usage) for an example of a complete AccessPolicy file.
 
+## Compatibility
+
+This gem was created as a replacement for CanCan and therefore it requires minimum work to switch.
+
+1. Both `can?`/`cannot?` and `authorize!` methods work in Rails controllers and views, so
+   **you don't have to adjust your views at all**.
+2. Syntax for defining permissions in AccessPolicy file (Ability in CanCan) is exactly the same, 
+   with added roles on top. See [Usage](#usage) below.
+3. **Main difference**: AccessGranted does not extend ActiveRecord in any way, so it does not have the `accessible_by?` 
+   method to keep the code as simple as possible. 
+   That is because `accessible_by?` was very limited making it useless in most cases (complex permissions with lambdas).
+
+   
 ## Installation
 
 Add this line to your application's Gemfile:
