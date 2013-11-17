@@ -102,7 +102,7 @@ class Policy
       # you must use blocks. Hash
       # conditions should be used for
       # simple checks only.
-      can [:edit, :destroy], Post do |post|
+      can [:update, :destroy], Post do |post|
         post.user_id == user.id && post.comments.empty?
       end
     end
