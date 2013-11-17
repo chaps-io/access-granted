@@ -29,8 +29,8 @@ module AccessGranted
     end
 
     def can?(action, subject)
-      match = find_permission(action, subject)
-      match ? match.granted : false
+      permission = find_permission(action, subject)
+      permission ? permission.granted : false
     end
 
     def find_permission(action, subject)
@@ -52,37 +52,39 @@ module AccessGranted
 
 
     def relevant_permissions(action, subject)
-      results = []
-
-      (@permissions_by_action[action] || []).each do |index|
-        perm = @permissions[index]
-        if perm.matches_subject?(subject)
-          results << perm
-        end
+      permissions_by_action(action).select do |perm|
+        perm.matches_subject?(subject)
       end
-
-      results
     end
 
     def matches_hash(user, conditions = {})
-      conditions.each_pair do |name, value|
-        return false if user.send(name) != value
+      conditions.all? do |name, value|
+        user.send(name) == value
       end
-      true
     end
 
     def add_permission(granted, action, subject, conditions, block)
+      prepare_actions(action).each do |a|
+        raise DuplicatePermission if relevant_permissions(a, subject).any?
+        @permissions << Permission.new(granted, a, subject, conditions, block)
+        @permissions_by_action[a] ||= []
+        @permissions_by_action[a]  << @permissions.size - 1
+      end
+    end
+
+    private
+
+    def prepare_actions(action)
       if action == :manage
         actions = [:create, :update, :destroy]
       else
         actions = [action].flatten
       end
+    end
 
-      actions.each do |a|
-        raise DuplicatePermission if relevant_permissions(a, subject).any?
-        @permissions << Permission.new(granted, a, subject, conditions, block)
-        @permissions_by_action[a] ||= []
-        @permissions_by_action[a]  << @permissions.size - 1
+    def permissions_by_action(action)
+      (@permissions_by_action[action] || []).map do |index|
+        @permissions[index]
       end
     end
   end
