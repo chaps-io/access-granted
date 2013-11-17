@@ -52,5 +52,30 @@ module AccessGranted
       end
       subject
     end
+
+    def print_table
+      headings = [{value: "Roles", alignment: :center}] + roles.sort_by {|r|  r.priority }.map(&:name)
+      permissions = []
+      rows = []
+      roles.each do |role|
+        permissions += role.permissions.map{|p| {action: p.action, subject: p.subject}}
+      end
+      permissions.uniq{|p| "#{p[:action]} #{p[:subject]}"}.sort_by {|p| p[:action].to_s}.each do |perm|
+        row = ["#{perm[:action]} " + "#{perm[:subject]}".light_blue]
+        roles.each do |role|
+          per = role.permissions.detect { |p| p.action == perm[:action] && p.subject == perm[:subject] }
+          value = (per.nil? ? "n/s".blue : (per.granted ? "can".green : "cannot".red))
+          value += " *" if per && (per.conditions.any? || per.block)
+          row << {value: value, alignment: :center}
+        end
+        rows << row
+      end
+      table = Terminal::Table.new headings: headings, rows: rows
+      puts table
+      puts "can".green  + "    - action allowed"
+      puts "cannot".red + " - action explicitly forbidden"
+      puts "n/s".blue   + "    - permission not specified for given role"
+      puts "*"   + "      - additional conditions apply"
+    end
   end
 end

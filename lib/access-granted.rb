@@ -4,6 +4,8 @@ require "access-granted/policy"
 require "access-granted/permission"
 require "access-granted/controller_methods"
 require "access-granted/role"
+require "terminal-table"
+require "colorize"
 
 module AccessGranted
 

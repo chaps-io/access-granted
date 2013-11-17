@@ -22,5 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "pry"
-  spec.add_development_dependency "text-table"
+  spec.add_dependency "terminal-table"
+  spec.add_dependency "colorize"
 end
