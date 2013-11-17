@@ -63,8 +63,8 @@ class Policy
   include AccessGranted::Policy
 
   def configure(user)
-    # the most important role prohibiting banned
-    # users from doing anything
+    # The most important role prohibiting banned
+    # users from doing anything.
     # (even if they are moderators or admins)
     role :banned, { is_banned: true } do
       cannot [:create, :update, :destroy], Post
@@ -74,14 +74,15 @@ class Policy
       cannot :manage, Comment
     end
 
-    # takes precedences over roles placed lower
-    # and lets admin mamange everything
+    # Takes precedences over roles placed lower
+    # and explicitly lets admin mamange everything.
     role :admin, { is_admin: true } do
       can :manage, Post
       can :manage, Comment
     end
 
-    # more complex logic to determine user's role
+    # You can also use Procs to determine
+    # if the role should apply to a given user.
     role :moderator, proc {|u| u.moderator? } do
       # overwrites permission that only allows removing own content in :member
       # and lets moderators edit and delete all posts
@@ -92,9 +93,8 @@ class Policy
       can :update, User
     end
 
-    # applies to everyone logged in
-    # second argument is priority
-    # the higher the number the more important the role
+    # Applies to everyone logged in.
+    # The basic role.
     role :member do
       can :create, Post
 
@@ -106,9 +106,6 @@ class Policy
         post.user_id == user.id && post.comments.empty?
       end
     end
-
-
-
   end
 end
 ```
