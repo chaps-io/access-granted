@@ -118,5 +118,3 @@ end
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
-[![Analytics](https://ga-beacon.appspot.com/UA-46907565-1/access-granted/index?pixel)](https://github.com/igrigorik/ga-beacon)
