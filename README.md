@@ -8,17 +8,19 @@ AccessGranted is meant as replacement for CanCan to solve three major problems:
 
 1. built-in support for roles
 
-  Easy to read acess policy code where permissions are cleanly grouped into roles which may or may not apply to a user.
-  Additionally permissions are forced to be unique in the scope a role greatly simplifying the
+  Easy to read access policy code where permissions are cleanly grouped into roles which may or may not apply to a user.
+  Additionally permissions are forced to be unique in the scope a role. Thus greatly simplifying the
   permission resolving and extremely reducing the code-base.
 
 2. white-list based
 
   This means that you define what a role **can** do,
   not overidding permissions with `cannot` in a specific order which results in an ugly and unmaintainable code.
+  
+  **Note**: `cannot` is still possible, but has a specifc use. See example below.
 
 3. Permissions can work on basically any object and AccessGranted is framework-agnostic,
-   (the only Rails-specific methods are `can?`/`cannot?`/`authorize!` helpers injected
+   (the Rails-specific methods are `can?`/`cannot?`/`authorize!` helpers injected
    into the framework only when it's present).
 
 See [Usage](#usage) for an example of a complete AccessPolicy file.
