@@ -1,7 +1,7 @@
 module AccessGranted
   module ControllerMethods
     def current_policy
-      @current_policy ||= ::Policy.new(current_user)
+      raise NotImplementedError, "You must implement #current_policy in ActionController."
     end
 
     def self.included(base)
