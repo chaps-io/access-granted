@@ -9,3 +9,7 @@ group :test, :development do
   gem 'rake'
   gem 'pry'
 end
+
+platforms :rbx do
+  gem 'rubysl', '~> 2.0'
+end
