@@ -20,6 +20,9 @@ module ActionController
 end
 require 'access-granted'
 
+class FakePost < Struct.new(:user_id)
+end
+
 class Policy
   include AccessGranted::Policy
 end

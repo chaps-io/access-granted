@@ -28,11 +28,6 @@ module AccessGranted
       add_permission(false, action, subject, conditions, block)
     end
 
-    def can?(action, subject)
-      permission = find_permission(action, subject)
-      permission ? permission.granted : false
-    end
-
     def find_permission(action, subject)
       relevant_permissions(action, subject).detect do |permission|
         permission.matches_conditions?(subject)
@@ -76,7 +71,7 @@ module AccessGranted
 
     def prepare_actions(action)
       if action == :manage
-        actions = [:create, :update, :destroy]
+        actions = [:read, :create, :update, :destroy]
       else
         actions = [action].flatten
       end

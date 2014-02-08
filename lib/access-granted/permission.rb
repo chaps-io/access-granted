@@ -35,9 +35,9 @@ module AccessGranted
 
     def eql?(other)
       other.class == self.class &&
-        @action   == other.action &&
-          @subject  == other.subject &&
-            @granted  == other.granted
+        @action == other.action &&
+          @subject == other.subject &&
+            @granted == other.granted
     end
 
     def ==(other)

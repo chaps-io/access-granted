@@ -9,10 +9,10 @@ describe AccessGranted::Policy do
 
   describe "#configure" do
     before :each do
-      @member = double("member",        is_moderator: false, is_admin: false, is_banned: false)
-      @mod    = double("moderator",     is_moderator: true,  is_admin: false, is_banned: false)
-      @admin  = double("administrator", is_moderator: false, is_admin: true,  is_banned: false)
-      @banned = double("banned",        is_moderator: false, is_admin: true,  is_banned: true)
+      @member = double("member",        id: 1, is_moderator: false, is_admin: false, is_banned: false)
+      @mod    = double("moderator",     id: 2, is_moderator: true,  is_admin: false, is_banned: false)
+      @admin  = double("administrator", id: 3, is_moderator: false, is_admin: true,  is_banned: false)
+      @banned = double("banned",        id: 4, is_moderator: false, is_admin: true,  is_banned: true)
     end
 
     it "selects permission based on role priority" do
@@ -20,27 +20,55 @@ describe AccessGranted::Policy do
         include AccessGranted::Policy
 
         def configure(user)
-          role :member do
-            can :read, String
-          end
-
-          role :moderator, { is_moderator: true } do
-            can :edit, String
-          end
-
           role :administrator, { is_admin: true } do
             can :destroy, String
           end
+
+          role :moderator, { is_moderator: true } do
+            can :update, String
+          end
+
+          role :member do
+            can :read, String
+          end
         end
       end
-      klass.new(@member).cannot?(:destroy, String).should be_true
       klass.new(@admin).can?(:destroy, String).should     be_true
       klass.new(@admin).can?(:read, String).should        be_true
+
+      klass.new(@member).cannot?(:destroy, String).should be_true
+      klass.new(@member).can?(:read, String).should       be_true
+
+      klass.new(@mod).can?(:read, String).should          be_true
       klass.new(@mod).cannot?(:destroy, String).should    be_true
     end
 
+    context "when multiple roles define the same permission" do
+      it "checks all roles until conditions are met" do
+        user_post = FakePost.new(@member.id)
+        other_post = FakePost.new(66)
+
+        klass = Class.new do
+          include AccessGranted::Policy
+
+          def configure(user)
+            role :administrator, { is_admin: true } do
+              can :destroy, FakePost
+            end
+
+            role :member do
+              can :destroy, FakePost, user_id: user.id
+            end
+          end
+        end
+
+        klass.new(@admin).can?(:destroy, user_post).should be_true
+        klass.new(@member).can?(:destroy, user_post).should be_true
+        klass.new(@member).cannot?(:destroy, other_post).should be_true
+      end
+    end
     describe "#cannot" do
-      it "forbids action when used in higher role" do
+      it "forbids action when used in superior role" do
         klass = Class.new do
           include AccessGranted::Policy
 
@@ -54,8 +82,8 @@ describe AccessGranted::Policy do
             end
           end
         end
-        klass.new(@member).can?(:create, String).should be_true
-        klass.new(@banned).can?(:create, String).should be_false
+        klass.new(@member).can?(:create, String).should    be_true
+        klass.new(@banned).cannot?(:create, String).should be_true
       end
     end
   end
@@ -86,7 +114,7 @@ describe AccessGranted::Policy do
         can :read, String
       end
 
-      role.can?(:read, String).should be_true
+      role.find_permission(:read, String).granted.should be_true
     end
   end
 

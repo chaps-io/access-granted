@@ -62,7 +62,7 @@ describe AccessGranted::Role do
 
     it "accepts :manage shortcut for CRUD actions" do
       @role.can :manage, String
-      @role.permissions.map(&:action).should include(:create, :update, :destroy)
+      @role.permissions.map(&:action).should include(:read, :create, :update, :destroy)
     end
 
     describe "when action is an Array" do
@@ -75,12 +75,12 @@ describe AccessGranted::Role do
     describe "when no conditions given" do
       it "should be able to read a class" do
         @role.can :read, String
-        @role.can?(:read, String).should be_true
+        @role.find_permission(:read, String).should be_true
       end
 
       it "should be able to read instance of class" do
         @role.can :read, String
-        @role.can?(:read, "text").should be_true
+        @role.find_permission(:read, "text").should be_true
       end
     end
 
@@ -88,7 +88,7 @@ describe AccessGranted::Role do
       it "should be able to read when conditions match" do
         sub = double("Element", published: true)
         @role.can :read, sub.class, { published: true }
-        @role.can?(:read, sub).should be_true
+        @role.find_permission(:read, sub).should be_true
       end
     end
   end
