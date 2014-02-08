@@ -1,7 +1,9 @@
 require 'rubygems'
 require 'bundler/setup'
-require 'simplecov'
-SimpleCov.start
+if ENV["COV"]
+  require 'simplecov'
+  SimpleCov.start
+end
 require 'pry'
 
 RSpec.configure do |config|
