@@ -81,12 +81,12 @@ class Policy
       cannot [:create, :update, :destroy], Post
 
       # same as above, :manage is just a shortcut for
-      # `[:create, :update, :destroy]`
+      # `[:read, :create, :update, :destroy]`
       cannot :manage, Comment
     end
 
     # Takes precedences over roles placed lower
-    # and explicitly lets admin mamange everything.
+    # and explicitly lets admin manage everything.
     role :admin, { is_admin: true } do
       can :manage, Post
       can :manage, Comment
@@ -95,7 +95,8 @@ class Policy
     # You can also use Procs to determine
     # if the role should apply to a given user.
     role :moderator, proc {|u| u.moderator? } do
-      # overwrites permission that only allows removing own content in :member
+      # takes precedence over :update/:destroy
+      # permissions defined in member role below
       # and lets moderators edit and delete all posts
       can [:update, :destroy], Post
 
@@ -104,8 +105,8 @@ class Policy
       can :update, User
     end
 
-    # Applies to everyone logged in.
     # The basic role.
+    # Applies to everyone logged in.
     role :member do
       can :create, Post
 
