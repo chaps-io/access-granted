@@ -5,7 +5,7 @@ describe AccessGranted::ControllerMethods do
     @current_user = double("User")
     @controller_class = Class.new
     @controller = @controller_class.new
-    @controller_class.stub(:helper_method).with(:can?, :cannot?, :current_ability)
+    @controller_class.stub(:helper_method).with(:can?, :cannot?, :current_policy)
     @controller_class.send(:include, AccessGranted::ControllerMethods)
     @controller.stub(:current_user).and_return(@current_user)
   end

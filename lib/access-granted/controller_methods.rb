@@ -5,7 +5,7 @@ module AccessGranted
     end
 
     def self.included(base)
-      base.helper_method :can?, :cannot?, :current_ability
+      base.helper_method :can?, :cannot?, :current_policy
     end
 
     def can?(*args)
