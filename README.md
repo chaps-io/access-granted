@@ -2,6 +2,10 @@
 
 Multi-role and whitelist based authorization gem for Rails. And it's lightweight (~300 lines of code)!
 
+### Supported Ruby versions
+
+Guaranteed to work on MRI 1.9.3/2.0/2.1, Rubinius >= 2.1.1 and JRuby >= 1.7.6.
+
 # Summary
 
 AccessGranted is meant as replacement for CanCan to solve three major problems:
