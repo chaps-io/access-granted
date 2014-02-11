@@ -37,7 +37,7 @@ module AccessGranted
     def applies_to?(user)
       case @conditions
       when Hash
-        matches_hash(user, @conditions)
+        matches_hash?(user, @conditions)
       when Proc
         @conditions.call(user)
       else
@@ -52,7 +52,7 @@ module AccessGranted
       end
     end
 
-    def matches_hash(user, conditions = {})
+    def matches_hash?(user, conditions = {})
       conditions.all? do |name, value|
         user.send(name) == value
       end
