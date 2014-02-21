@@ -53,17 +53,15 @@ This gem was created as a replacement for CanCan and therefore it requires minim
 
 ## Installation
 
-Add this line to your application's Gemfile:
+### Rails
+
+This includes Rails-specific integration (`can?`, `cannot?`, `current_policy` helpers and more):
+
+    gem 'access-granted-rails'
+
+### Others
 
     gem 'access-granted'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install access-granted
 
 ## Usage
 
