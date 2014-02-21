@@ -24,8 +24,9 @@ AccessGranted is meant as replacement for CanCan to solve three major problems:
   **Note**: `cannot` is still possible, but has a specifc use. See [Usage](#usage) below.
 
 3. Permissions can work on basically any object and AccessGranted is framework-agnostic,
-   (the Rails-specific methods are `can?`/`cannot?`/`authorize!` helpers injected
-   into the framework only when it's present).
+   But we offer extensions for your favourite frameworks as gems:
+   - Rails: [access-granted-rails](https://github.com/pokonski/access-granted-rails)
+   - ... more to come!
 
 See [Usage](#usage) for an example of a complete AccessPolicy file.
 
@@ -41,11 +42,8 @@ This gem was created as a replacement for CanCan and therefore it requires minim
    I decided to not implement this functionality as it was mostly ignored by CanCan users.
 
 2. Both `can?`/`cannot?` and `authorize!` methods work in Rails controllers and views, just like in CanCan.
-   The only change you have to make is replace all `can? :manage, Class` with precise action.
-   `can :manage` is stil available for **defining** methods and serves as a shortcut for defining `:read`, `:create`, `:update`, `:destroy`
-   in one line.
-
-   Due to introduction of Roles checking for generic `:manage` permission is very complicated and also confusing for developers.
+   The only change you have to make is replace all `can? :manage, Class` with exact action to check against.
+   `can :manage` is stil available for **defining** methods and serves as a shortcut for defining `:read`, `:create`, `:update`, `:destroy` in one line.
 
 3. Syntax for defining permissions in AccessPolicy file (Ability in CanCan) is exactly the same,
    with added roles on top. See [Usage](#usage) below.
