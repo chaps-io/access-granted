@@ -13,19 +13,22 @@ module AccessGranted
     end
 
     def role(name, conditions_or_klass = nil, conditions = nil, &block)
-      name = name.to_sym
-      if roles.select {|r| r.name == name }.any?
+      if role_exists?(name)
         raise DuplicateRole, "Role '#{name}' already defined"
       end
-      @last_priority += 1
-      r = if conditions_or_klass.is_a?(Class) && conditions_or_klass <= AccessGranted::Role
-        conditions_or_klass.new(name, @last_priority, conditions, @user, block)
-      else
-        Role.new(name, @last_priority, conditions_or_klass, @user, block)
+
+      conditions = conditions_or_klass
+      if conditions_or_klass.respond_to?(:to_conditions)
+        conditions = conditions_or_klass.to_conditions
       end
-      roles << r
-      roles.sort_by! {|r|  r.priority }
-      r
+
+      @last_priority += 1
+      roles << Role.new(name, @last_priority, conditions, @user, block)
+      roles.last
+    end
+
+    def role_exists?(name)
+      roles.any? { |role| role.name == name.to_sym }
     end
 
     def can?(action, subject)

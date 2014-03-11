@@ -110,13 +110,9 @@ describe AccessGranted::Policy do
 
   describe "#role" do
     it "allows passing role class" do
-      klass_role = Class.new AccessGranted::Role do
-        def configure(user)
-          can :read, String
-        end
-      end
-      @policy.role(:member, klass_role)
-      @policy.roles.first.class.should == klass_role
+      role = AccessGranted::Role.new(:role, 1, foo: "bar")
+      @policy.role(:member, role)
+      @policy.roles.first.conditions.should == role.to_conditions
     end
 
     it "allows defining a default role" do
