@@ -86,6 +86,26 @@ describe AccessGranted::Policy do
         klass.new(@banned).cannot?(:create, String).should be_true
       end
     end
+
+    describe "#authorize!" do
+      let(:klass) do
+        Class.new do
+          include AccessGranted::Policy
+
+          def configure(user)
+            role(:member) { can :create, String }
+          end
+        end
+      end
+
+      it "raises AccessDenied if actions is not allowed" do
+        expect { klass.new(@member).authorize!(:create, Integer) }.to raise_error AccessGranted::AccessDenied
+      end
+
+      it "returns the subject if allowed" do
+        expect(klass.new(@member).authorize!(:create, String)).to equal String
+      end
+    end
   end
 
   describe "#role" do
