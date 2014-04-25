@@ -8,18 +8,18 @@ Guaranteed to work on MRI 1.9.3/2.0/2.1, Rubinius >= 2.1.1 and JRuby >= 1.7.6.
 
 # Summary
 
-AccessGranted is meant as replacement for CanCan to solve three major problems:
+AccessGranted is meant as a replacement for CanCan to solve three major problems:
 
 1. built-in support for roles
 
   Easy to read access policy code where permissions are cleanly grouped into roles which may or may not apply to a user.
-  Additionally permissions are forced to be unique in the scope a role. Thus greatly simplifying the
-  permission resolving and extremely reducing the code-base.
+  Additionally permissions are forced to be unique in the scope of a role. This greatly simplifies the resolving 
+  permissions while substantially reducing the code-base.
 
 2. white-list based
 
   This means that you define what a role **can** do,
-  not overidding permissions with `cannot` in a specific order which results in an ugly and unmaintainable code.
+  not overidding permissions with `cannot` in a specific order which results in ugly, unmaintainable code.
 
   **Note**: `cannot` is still possible, but has a specifc use. See [Usage](#usage) below.
 
@@ -42,8 +42,8 @@ This gem was created as a replacement for CanCan and therefore it requires minim
    I decided to not implement this functionality as it was mostly ignored by CanCan users.
 
 2. Both `can?`/`cannot?` and `authorize!` methods work in Rails controllers and views, just like in CanCan.
-   The only change you have to make is replace all `can? :manage, Class` with exact action to check against.
-   `can :manage` is stil available for **defining** methods and serves as a shortcut for defining `:read`, `:create`, `:update`, `:destroy` in one line.
+   The only change you have to make is to replace all `can? :manage, Class` with the exact action to check against.
+   `can :manage` is still available for **defining** methods and serves as a shortcut for defining `:read`, `:create`, `:update`, `:destroy` all in one line.
 
 3. Syntax for defining permissions in AccessPolicy file (Ability in CanCan) is exactly the same,
    with added roles on top. See [Usage](#usage) below.
