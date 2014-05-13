@@ -67,6 +67,10 @@ module AccessGranted
       end
     end
 
+    def to_conditions
+      @conditions
+    end
+
     private
 
     def prepare_actions(action)
