@@ -1,11 +1,8 @@
 require 'spec_helper'
 
 describe AccessGranted::Policy do
-  before :each do
-    @policy = Class.new do
-      include AccessGranted::Policy
-    end.new(nil)
-  end
+  let(:klass)      { Class.new { include AccessGranted::Policy } }
+  subject(:policy) { klass.new(nil) }
 
   describe "#configure" do
     before :each do
@@ -115,22 +112,22 @@ describe AccessGranted::Policy do
           can :read, String
         end
       end
-      @policy.role(:member, klass_role)
-      expect(@policy.roles.first.class).to eq(klass_role)
+      subject.role(:member, klass_role)
+      expect(policy.roles.first.class).to eq(klass_role)
     end
 
     it "allows defining a default role" do
-      @policy.role(:member)
-      expect(@policy.roles.map(&:name)).to include(:member)
+      policy.role(:member)
+      expect(policy.roles.map(&:name)).to include(:member)
     end
 
     it "does not allow duplicate role names" do
-      @policy.role(:member)
-      expect { @policy.role(:member) }.to raise_error AccessGranted::DuplicateRole
+      policy.role(:member)
+      expect { policy.role(:member) }.to raise_error AccessGranted::DuplicateRole
     end
 
     it "allows nesting `can` calls inside a block" do
-      role = @policy.role(:member) do
+      role = policy.role(:member) do
         can :read, String
       end
 
@@ -139,14 +136,32 @@ describe AccessGranted::Policy do
   end
 
   describe "#match_roles" do
-    it "returns all matching roles in the order of priority" do
-      user = double("User", is_moderator: true, is_admin: true)
+    let(:user) { double("User", is_moderator: true, is_admin: true) }
 
-      @policy.role(:administrator, { is_admin:     true })
-      @policy.role(:moderator,     { is_moderator: true })
-      @policy.role(:member)
+    before do
+      policy.role(:administrator, { is_admin:     true })
+      policy.role(:moderator,     { is_moderator: true })
+      policy.role(:member)
+    end
 
-      expect(@policy.match_roles(user).map(&:name)).to eq([:administrator, :moderator, :member])
+    shared_examples 'role matcher' do
+
+      it "returns all matching roles in the order of priority" do
+        expect(subject.map(&:name)).to eq([:administrator, :moderator, :member])
+      end
+    end
+
+    context 'with user parameter' do
+      subject { policy.match_roles(user) }
+
+      it_behaves_like 'role matcher'
+    end
+
+    context 'without user parameter' do
+      let(:policy) { klass.new(user) }
+      subject      { policy.match_roles }
+
+      it_behaves_like 'role matcher'
     end
   end
 end
