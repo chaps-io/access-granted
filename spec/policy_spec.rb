@@ -33,14 +33,14 @@ describe AccessGranted::Policy do
           end
         end
       end
-      klass.new(@admin).can?(:destroy, String).should     be_true
-      klass.new(@admin).can?(:read, String).should        be_true
+      expect(klass.new(@admin).can?(:destroy, String)).to     eq(true)
+      expect(klass.new(@admin).can?(:read, String)).to        eq(true)
 
-      klass.new(@member).cannot?(:destroy, String).should be_true
-      klass.new(@member).can?(:read, String).should       be_true
+      expect(klass.new(@member).cannot?(:destroy, String)).to eq(true)
+      expect(klass.new(@member).can?(:read, String)).to       eq(true)
 
-      klass.new(@mod).can?(:read, String).should          be_true
-      klass.new(@mod).cannot?(:destroy, String).should    be_true
+      expect(klass.new(@mod).can?(:read, String)).to         eq(true)
+      expect(klass.new(@mod).cannot?(:destroy, String)).to   eq(true)
     end
 
     context "when multiple roles define the same permission" do
@@ -62,9 +62,9 @@ describe AccessGranted::Policy do
           end
         end
 
-        klass.new(@admin).can?(:destroy, user_post).should be_true
-        klass.new(@member).can?(:destroy, user_post).should be_true
-        klass.new(@member).cannot?(:destroy, other_post).should be_true
+       expect(klass.new(@admin).can?(:destroy, user_post)).to eq(true)
+       expect(klass.new(@member).can?(:destroy, user_post)).to eq(true)
+       expect(klass.new(@member).cannot?(:destroy, other_post)).to eq(true)
       end
     end
     describe "#cannot" do
@@ -82,8 +82,8 @@ describe AccessGranted::Policy do
             end
           end
         end
-        klass.new(@member).can?(:create, String).should    be_true
-        klass.new(@banned).cannot?(:create, String).should be_true
+        expect(klass.new(@member).can?(:create, String)).to    eq(true)
+        expect(klass.new(@banned).cannot?(:create, String)).to eq(true)
       end
     end
 
@@ -116,12 +116,12 @@ describe AccessGranted::Policy do
         end
       end
       @policy.role(:member, klass_role)
-      @policy.roles.first.class.should == klass_role
+      expect(@policy.roles.first.class).to eq(klass_role)
     end
 
     it "allows defining a default role" do
       @policy.role(:member)
-      @policy.roles.map(&:name).should include(:member)
+      expect(@policy.roles.map(&:name)).to include(:member)
     end
 
     it "does not allow duplicate role names" do
@@ -134,7 +134,7 @@ describe AccessGranted::Policy do
         can :read, String
       end
 
-      role.find_permission(:read, String).granted.should be_true
+      expect(role.find_permission(:read, String).granted).to eq(true)
     end
   end
 
@@ -146,8 +146,7 @@ describe AccessGranted::Policy do
       @policy.role(:moderator,     { is_moderator: true })
       @policy.role(:member)
 
-      @policy.match_roles(user).map(&:name).should == [:administrator, :moderator, :member]
+      expect(@policy.match_roles(user).map(&:name)).to eq([:administrator, :moderator, :member])
     end
   end
-
 end
