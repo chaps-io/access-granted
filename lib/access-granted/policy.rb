@@ -40,10 +40,9 @@ module AccessGranted
       !can?(*args)
     end
 
-    def match_roles(user)
-      roles.select do |role|
-        role.applies_to?(user)
-      end
+    def match_roles(user = nil)
+      user ||= @user
+      roles.select { |role| role.applies_to?(user) }
     end
 
     def authorize!(action, subject)
