@@ -116,6 +116,15 @@ describe AccessGranted::Policy do
       expect(policy.roles.first.class).to eq(klass_role)
     end
 
+    it "returns roles in the order of priority" do
+      policy.role(:admin)
+      policy.role(:moderator)
+      policy.role(:user)
+      policy.role(:guest)
+
+      expect(policy.roles.map(&:name)).to eq([:admin, :moderator, :user, :guest])
+    end
+
     it "allows defining a default role" do
       policy.role(:member)
       expect(policy.roles.map(&:name)).to include(:member)
