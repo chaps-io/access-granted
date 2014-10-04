@@ -44,7 +44,6 @@ module AccessGranted
       end
     end
 
-
     def relevant_permissions(action, subject)
       permissions_by_action(action).select do |perm|
         perm.matches_subject?(subject)
