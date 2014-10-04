@@ -29,7 +29,7 @@ module AccessGranted
     end
 
     def can?(action, subject)
-      match_roles(@user).each do |role|
+      matching_roles.each do |role|
         permission = role.find_permission(action, subject)
         return permission.granted if permission
       end
@@ -40,9 +40,8 @@ module AccessGranted
       !can?(*args)
     end
 
-    def match_roles(user = nil)
-      user ||= @user
-      roles.select { |role| role.applies_to?(user) }
+    def matching_roles
+      roles.select { |role| role.applies_to?(@user) }
     end
 
     def authorize!(action, subject)

@@ -135,7 +135,7 @@ describe AccessGranted::Policy do
     end
   end
 
-  describe "#match_roles" do
+  describe "#matching_roles" do
     let(:user) { double("User", is_moderator: true, is_admin: true) }
 
     before do
@@ -145,23 +145,9 @@ describe AccessGranted::Policy do
     end
 
     shared_examples 'role matcher' do
-
       it "returns all matching roles in the order of priority" do
         expect(subject.map(&:name)).to eq([:administrator, :moderator, :member])
       end
-    end
-
-    context 'with user parameter' do
-      subject { policy.match_roles(user) }
-
-      it_behaves_like 'role matcher'
-    end
-
-    context 'without user parameter' do
-      let(:policy) { klass.new(user) }
-      subject      { policy.match_roles }
-
-      it_behaves_like 'role matcher'
     end
   end
 end
