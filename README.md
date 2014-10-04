@@ -10,23 +10,25 @@ Guaranteed to work on MRI 1.9.3/2.0/2.1, Rubinius >= 2.1.1 and JRuby >= 1.7.6.
 
 AccessGranted is meant as a replacement for CanCan to solve three major problems:
 
-1. built-in support for roles
+1. **built-in support for roles**
 
-  Easy to read access policy code where permissions are cleanly grouped into roles which may or may not apply to a user.
-  Additionally permissions are forced to be unique in the scope of a role. This greatly simplifies the resolving 
+  Easy to read access policy code where permissions are cleanly grouped into roles.
+  Additionally, permissions are forced to be unique in the scope of a role. This greatly simplifies the resolving
   permissions while substantially reducing the code-base.
 
-2. white-list based
+2. **white-list based**
 
-  This means that you define what a role **can** do,
-  not overidding permissions with `cannot` in a specific order which results in ugly, unmaintainable code.
+  This means that you define what a role **can** do, which results in clean, readable policies regardless of complexity.
+  You don't have to worry about juggling `can`s and `cannot`s in a very convoluted way!
 
-  **Note**: `cannot` is still possible, but has a specifc use. See [Usage](#usage) below.
+  _Note_: `cannot` is still available, but has a very specifc use. See [Usage](#usage) below.
 
-3. Permissions can work on basically any object and AccessGranted is framework-agnostic,
-   But we offer extensions for your favourite frameworks as gems:
-   - Rails: [access-granted-rails](https://github.com/pokonski/access-granted-rails)
-   - ... more to come!
+3. **framework agnostic**
+
+  Permissions can work on basically any object and AccessGranted is framework-agnostic,
+  But we offer extensions for your favourite frameworks as gems:
+  - Rails: [access-granted-rails](https://github.com/pokonski/access-granted-rails)
+  - ... more to come!
 
 See [Usage](#usage) for an example of a complete AccessPolicy file.
 
@@ -117,6 +119,44 @@ class Policy
       can [:update, :destroy], Post do |post|
         post.user_id == user.id && post.comments.empty?
       end
+    end
+  end
+end
+```
+
+## Common examples
+
+### Extracting roles to separate files
+
+Let's say your app is getting bigger and more complex. This means your policy file is also getting longer.
+
+Below you can see an extracted `:member` role:
+
+```ruby
+class AccessPolicy
+  include AccessGranted::Policy
+
+  def configure(user)
+    role :administrator, is_admin: true do
+      can :manage, User
+    end
+
+    role :member, MemberRole, lambda { |user| !u.guest? }
+  end
+end
+
+```
+
+And roles should look like this
+
+```ruby
+# app/roles/member_role.rb
+
+class MemberRole < AccessGranted::Role
+  def configure(user)
+    can :create, Post
+    can :destroy, Post do |post|
+      post.author == user
     end
   end
 end
