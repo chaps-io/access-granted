@@ -24,7 +24,6 @@ module AccessGranted
         Role.new(name, @last_priority, conditions_or_klass, @user, block)
       end
       roles << r
-      roles.sort_by! {|r|  r.priority }
       r
     end
 
