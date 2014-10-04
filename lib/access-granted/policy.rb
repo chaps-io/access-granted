@@ -5,7 +5,6 @@ module AccessGranted
     def initialize(user)
       @user          = user
       @roles         = []
-      @last_priority = 0
       configure(@user)
     end
 
@@ -17,11 +16,10 @@ module AccessGranted
       if roles.select {|r| r.name == name }.any?
         raise DuplicateRole, "Role '#{name}' already defined"
       end
-      @last_priority += 1
       r = if conditions_or_klass.is_a?(Class) && conditions_or_klass <= AccessGranted::Role
-        conditions_or_klass.new(name, @last_priority, conditions, @user, block)
+        conditions_or_klass.new(name, conditions, @user, block)
       else
-        Role.new(name, @last_priority, conditions_or_klass, @user, block)
+        Role.new(name, conditions_or_klass, @user, block)
       end
       roles << r
       r

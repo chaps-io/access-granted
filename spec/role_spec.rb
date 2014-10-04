@@ -7,17 +7,13 @@ describe AccessGranted::Role do
     expect { subject.new }.to raise_error
   end
 
-  it "requires priority" do
-    expect { subject.new(:member) }.to raise_error
-  end
-
   it "creates a default role without conditions" do
-    expect(subject.new(:member, 1).conditions).to be_nil
+    expect(subject.new(:member).conditions).to be_nil
   end
 
   describe "#relevant_permissions?" do
     it "returns only matching permissions" do
-      role = subject.new(:member, 1)
+      role = subject.new(:member)
       role.can :read, String
       role.can :read, Hash
       expect(role.relevant_permissions(:read, String)).to eq([AccessGranted::Permission.new(true, :read, String)])
@@ -26,25 +22,25 @@ describe AccessGranted::Role do
 
   describe "#applies_to?" do
     it "matches user when no conditions given" do
-      role = subject.new(:member, 1)
+      role = subject.new(:member)
       user = double("User")
       expect(role.applies_to?(user)).to eq(true)
     end
 
     it "matches user by hash conditions" do
-      role = subject.new(:moderator, 1,  { is_moderator: true })
+      role = subject.new(:moderator,  { is_moderator: true })
       user = double("User", is_moderator: true)
       expect(role.applies_to?(user)).to eq(true)
     end
 
     it "doesn't match user if any of hash conditions is not met" do
-      role = subject.new(:moderator, 1, { is_moderator: true, is_admin: true })
+      role = subject.new(:moderator, { is_moderator: true, is_admin: true })
       user = double("User", is_moderator: true, is_admin: false)
       expect(role.applies_to?(user)).to eq(false)
     end
 
     it "matches user by Proc conditions" do
-      role = subject.new(:moderator, 1, proc {|user| user.is_moderator? })
+      role = subject.new(:moderator, proc {|user| user.is_moderator? })
       user = double("User", is_moderator?: true)
       expect(role.applies_to?(user)).to eq(true)
     end
@@ -52,7 +48,7 @@ describe AccessGranted::Role do
 
   describe "#can" do
     before :each do
-      @role = AccessGranted::Role.new(:member, 1)
+      @role = AccessGranted::Role.new(:member)
     end
 
     it "forbids creating actions with the same name" do
