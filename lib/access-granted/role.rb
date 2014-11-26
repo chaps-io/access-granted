@@ -69,7 +69,7 @@ module AccessGranted
 
     def prepare_actions(action)
       if action == :manage
-        actions = [:read, :create, :update, :destroy]
+        actions = [:read, :create, :update, :destroy, :manage]
       else
         actions = Array(*[action])
       end
