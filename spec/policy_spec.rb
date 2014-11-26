@@ -40,6 +40,24 @@ describe AccessGranted::Policy do
       expect(klass.new(@mod).cannot?(:destroy, String)).to   eq(true)
     end
 
+    context "when a policy role defines manage" do
+      it "can manage" do
+        user_post = FakePost.new(@member.id)
+
+        klass = Class.new do
+          include AccessGranted::Policy
+
+          def configure(user)
+            role :member do
+              can :manage, FakePost
+            end
+          end
+        end
+
+       expect(klass.new(@member).can?(:manage, user_post)).to eq(true)
+      end
+    end
+
     context "when multiple roles define the same permission" do
       it "checks all roles until conditions are met" do
         user_post = FakePost.new(@member.id)
