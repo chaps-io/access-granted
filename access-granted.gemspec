@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["piotrek@okonski.org"]
   spec.description   = %q{Role based authorization gem}
   spec.summary       = %q{Elegant whitelist and role based authorization with ability to prioritize roles.}
-  spec.homepage      = "https://github.com/pokonski/access-granted"
+  spec.homepage      = "https://github.com/chaps-io/access-granted"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
