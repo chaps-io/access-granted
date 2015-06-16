@@ -1,4 +1,7 @@
-# AccessGranted [![Build Status](https://travis-ci.org/pokonski/access-granted.png?branch=master)](https://travis-ci.org/pokonski/access-granted) [![Code Climate](https://codeclimate.com/github/pokonski/access-granted.png)](https://codeclimate.com/github/pokonski/access-granted)
+# AccessGranted [![Build Status](https://travis-ci.org/chaps-io/access-granted.svg?branch=master)](https://travis-ci.org/chaps-io/access-granted) [![Code Climate](https://codeclimate.com/github/pokonski/access-granted.png)](https://codeclimate.com/github/pokonski/access-granted)
+
+by [Chaps](https://chaps.io)
+
 
 Multi-role and whitelist based authorization gem for Rails. And it's lightweight (~300 lines of code)!
 
