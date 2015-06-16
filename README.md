@@ -1,6 +1,6 @@
 # AccessGranted [![Build Status](https://travis-ci.org/chaps-io/access-granted.svg?branch=master)](https://travis-ci.org/chaps-io/access-granted) [![Code Climate](https://codeclimate.com/github/pokonski/access-granted.png)](https://codeclimate.com/github/pokonski/access-granted)
 
-by [Chaps](https://chaps.io)
+## [![](http://i.imgur.com/ya8Wnyl.png)](https://chaps.io) proudly made by [Chaps](https://chaps.io)
 
 
 Multi-role and whitelist based authorization gem for Rails. And it's lightweight (~300 lines of code)!
