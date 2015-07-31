@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'bundler/setup'
+
 if ENV["COV"]
   require 'simplecov'
   SimpleCov.start
@@ -19,12 +20,13 @@ module ActionController
     end
   end
 end
+
 require 'access-granted'
 
 class FakePost < Struct.new(:user_id)
 end
 
-class Policy
+class AccessPolicy
   include AccessGranted::Policy
 end
 

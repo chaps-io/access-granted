@@ -4,7 +4,7 @@ describe AccessGranted::Role do
   subject { AccessGranted::Role }
 
   it "requires a role name" do
-    expect { subject.new }.to raise_error
+    expect { subject.new }.to raise_error(ArgumentError)
   end
 
   it "creates a default role without conditions" do
