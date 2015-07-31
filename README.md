@@ -42,7 +42,6 @@ AccessGranted is meant as a replacement for CanCan to solve three major problems
 Roles are defined using blocks (or by passing custom classes to keep things tidy).
 
 Order of the roles is important, because they are being traversed in the top-to-bottom order.
-
 Generally at the top you will have an admin or other important role giving the user top permissions, and as you go down you define less-privileged roles.
 
 ### 1. Defining access policy
@@ -109,7 +108,7 @@ end
 ```
 ### Using in Rails
 
-AccessGranted comes with a set of helpers available in Rails apps:
+AccessGranted comes with a set of helpers available in Ruby on Rails apps:
 
 #### Authorizing controller actions
 
@@ -125,12 +124,13 @@ class PostsController
     # (...)
   end
 end
+```
 
 `authorize!` throws an exception when current user doesn't have a given permission.
 You can rescue from it using `rescue_from`:
 
 ```ruby
-class ApplicationController
+class ApplicationController < ActionController::Base
   rescue_from "AccessGranted::AccessDenied" do |exception|
     redirect_to root_path, alert: "You don't have permissions to access this page."
   end
@@ -200,15 +200,15 @@ with `can?`:
 
 ```ruby
 policy.can?(:create, Post) #=> true
+policy.can?(:update, @post) #=> false
 ```
 
 or with `cannot?`:
 
 ```ruby
 policy.cannot?(:create, Post) #=> false
+policy.cannot?(:update, @ost) #=> true
 ```
-
-
 
 ## Common examples
 
