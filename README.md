@@ -55,49 +55,23 @@ class AccessPolicy
   include AccessGranted::Policy
 
   def configure(user)
-
-    # The most important role prohibiting banned
-    # users from doing anything.
-    # (even if they are moderators or admins)
-
-    role :banned, { is_banned: true } do
-      cannot [:create, :update, :destroy], Post
-
-      # :manage is just a shortcut for `[:read, :create, :update, :destroy]`
-      cannot :manage, Comment
-    end
-
+  
+    # The most important admin role, gets checked first
+    
     role :admin, { is_admin: true } do
       can :manage, Post
       can :manage, Comment
     end
 
-    # You can also use Procs to determine
-    # if the role should apply to a given user.
-
+    # Less privileged moderator role
     role :moderator, proc {|u| u.moderator? } do
-      # takes precedence over :update/:destroy
-      # permissions defined in member role below
-      # and lets moderators edit and delete all posts
-
       can [:update, :destroy], Post
-
-      # and a new permission which lets moderators
-      # modify user accounts
-
       can :update, User
     end
 
     # The basic role. Applies to every user.
-
     role :member do
       can :create, Post
-
-      # For more advanced permissions
-      # you can use blocks or hashes.
-      # Hashconditions should be used for
-      # simple checks of attributes, while
-      # blocks to run additional code with custom logic.
 
       can [:update, :destroy], Post do |post|
         post.user_id == user.id && post.comments.empty?
@@ -141,6 +115,17 @@ The `{ is_admin: true }` hash is compared with the user's attributes to see if t
 So, if user has an attribute `is_admin` set to `true`, then the role will be used for him.
 
 **Note:** you can use more keys in the hash to check more attributes.
+
+#### Hash conditions
+
+Hashes can be used as matchers to check if action is permitted.
+For example, we may allow users to only see published posts, like this: 
+
+```ruby
+role :member do
+  can :read, Post, { published: true }
+end
+```
 
 #### Block conditions
 
