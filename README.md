@@ -106,6 +106,73 @@ class AccessPolicy
   end
 end
 ```
+
+#### Defining roles
+
+Each `role` method accepts the name of the role you're creating and an optional matcher.
+Matchers are used to check if user belongs to that role and if the permissions inside should be executed against him.
+
+The simplest role can be defined as follows:
+
+```ruby
+role :member do
+  can :read, Post
+  can :create, Post
+end
+```
+
+This role will allow everyone (since we didn't supply a matcher) to read and create posts.
+
+But now we want to let admins delete those posts (for example spam posts). 
+In this case we create a new role above the `:member` to add more permissions for the admin:
+
+```ruby
+role :admin, { is_admin: true } do
+  can :destroy, Post
+end
+
+role :member do
+  can :read, Post
+  can :create, Post
+end
+```
+
+The `{ is_admin: true }` hash is compared with the user's attributes to see if the role should by applied to him.
+So, if user has an attribute `is_admin` set to `true`, then the role will be used for him.
+
+**Note:** you can use more keys in the hash to check more attributes.
+
+"But wait! User should be able to edit his posts, and only his posts!" you are wondering. 
+This can be done using a block condition in `can` method, like this:
+
+```ruby
+role :member do
+  # (...)
+  can :update, Post do |post|
+    post.author_id == user.id
+  end
+end
+```
+
+When the given block evaluates to `true`, then the user is given the permission to update the post. Additionally we can allow admins to update **all** posts despite them not being authors like this:
+
+
+```ruby
+role :admin, { is_admin: true } do
+  can :update, Post
+end
+
+role :member do
+  can :update, Post do |post|
+    post.author_id == user.id
+  end
+end
+```
+
+Keep in mind that `admin` role takes precedence (that is why we put it above `:member`) so when AccessGranted sees that admin can update all posts then it stops looking and doesn't check permissions in less important roles. 
+
+That way you can keep a tidy and readable policy file which is basically human readable!
+
 ### Using in Rails
 
 AccessGranted comes with a set of helpers available in Ruby on Rails apps:
