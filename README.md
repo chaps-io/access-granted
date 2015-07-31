@@ -41,8 +41,8 @@ AccessGranted is meant as a replacement for CanCan to solve three major problems
 
 Roles are defined using blocks (or by passing custom classes to keep things tidy).
 
-Order of the roles is important, because they are being traversed in the top-to-bottom order.
-Generally at the top you will have an admin or other important role giving the user top permissions, and as you go down you define less-privileged roles.
+**Order of the roles is VERY important**, because they are being traversed in the top-to-bottom order.
+At the top you must have an admin or other important role giving the user top permissions, and as you go down you define less-privileged roles.
 
 ### 1. Defining access policy
 
@@ -142,6 +142,8 @@ So, if user has an attribute `is_admin` set to `true`, then the role will be use
 
 **Note:** you can use more keys in the hash to check more attributes.
 
+#### Block conditions
+
 "But wait! User should be able to edit his posts, and only his posts!" you are wondering. 
 This can be done using a block condition in `can` method, like this:
 
@@ -154,7 +156,11 @@ role :member do
 end
 ```
 
-When the given block evaluates to `true`, then the user is given the permission to update the post. Additionally we can allow admins to update **all** posts despite them not being authors like this:
+When the given block evaluates to `true`, then the user is given the permission to update the post. 
+
+#### Roles in order of importance
+
+Additionally we can allow admins to update **all** posts despite them not being authors like this:
 
 
 ```ruby
@@ -169,9 +175,9 @@ role :member do
 end
 ```
 
-Keep in mind that `admin` role takes precedence (that is why we put it above `:member`) so when AccessGranted sees that admin can update all posts then it stops looking and doesn't check permissions in less important roles. 
+As stated before: **`:admin` role takes precedence over `:member`** role, so when AccessGranted sees that admin can update all posts, it stops looking at the less important roles. 
 
-That way you can keep a tidy and readable policy file which is basically human readable!
+That way you can keep a tidy and readable policy file which is basically human readable.
 
 ### Using in Rails
 
