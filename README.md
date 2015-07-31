@@ -111,14 +111,14 @@ role :member do
 end
 ```
 
-The `{ is_admin: true }` hash is compared with the user's attributes to see if the role should by applied to him.
-So, if user has an attribute `is_admin` set to `true`, then the role will be used for him.
+The `{ is_admin: true }` hash is compared with the user's attributes to see if the role should be applied to him.
+So, if the user has an attribute `is_admin` set to `true`, then the role will be applied to him.
 
-**Note:** you can use more keys in the hash to check more attributes.
+**Note:** you can use more keys in the hash to check many attributes at once.
 
 #### Hash conditions
 
-Hashes can be used as matchers to check if action is permitted.
+Hashes can be used as matchers as a check if action is permitted.
 For example, we may allow users to only see published posts, like this: 
 
 ```ruby
@@ -129,19 +129,18 @@ end
 
 #### Block conditions
 
-"But wait! User should be able to edit his posts, and only his posts!" you are wondering. 
+"But wait! User should also be able to edit his posts, and only his posts!" you are wondering. 
 This can be done using a block condition in `can` method, like this:
 
 ```ruby
 role :member do
-  # (...)
   can :update, Post do |post|
     post.author_id == user.id
   end
 end
 ```
 
-When the given block evaluates to `true`, then the user is given the permission to update the post. 
+When the given block evaluates to `true`, the user is then given the permission to update the post. 
 
 #### Roles in order of importance
 
