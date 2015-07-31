@@ -11,5 +11,5 @@ group :test, :development do
 end
 
 platforms :rbx do
-  gem 'rubysl', '~> 2.0'
+  gem 'rubysl', '~> 2.1'
 end
