@@ -11,15 +11,6 @@ describe AccessGranted::Role do
     expect(subject.new(:member).conditions).to be_nil
   end
 
-  describe "#relevant_permissions?" do
-    it "returns only matching permissions" do
-      role = subject.new(:member)
-      role.can :read, String
-      role.can :read, Hash
-      expect(role.relevant_permissions(:read, String)).to eq([AccessGranted::Permission.new(true, :read, String)])
-    end
-  end
-
   describe "#applies_to?" do
     it "matches user when no conditions given" do
       role = subject.new(:member)
