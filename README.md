@@ -18,19 +18,23 @@ Guaranteed to work on all major Ruby versions MRI 1.9.3-2.2, Rubinius >= 2.X and
 
 AccessGranted is meant as a replacement for CanCan to solve three major problems:
 
-1. built-in support for user roles
+1. Performance
+  On average AccessGranted is 50-60% faster in resolving identical dependencies and takes less memory.
+  See [benchmarks](https://github.com/chaps-io/access-granted/blob/master/benchmarks).
+
+2. Built-in support for user roles
 
   Easy to read access policy code where permissions are cleanly grouped into roles.
   Additionally, permissions are forced to be unique in the scope of a role. This greatly simplifies resolving permissions and makes it faster.
 
-2. white-list based
+3. white-list based
 
   This means that you define what the user **can** do, which results in clean, readable policies regardless of app complexity.
   You don't have to worry about juggling `can`s and `cannot`s in a very convoluted way!
 
   _Note_: `cannot` is still available, but has a very specifc use. See [Usage](#usage) below.
 
-3. framework agnostic
+4. framework agnostic
 
   Permissions can work on basically any object and AccessGranted is framework-agnostic,
   but it has Rails support of out the box :)
@@ -55,9 +59,9 @@ class AccessPolicy
   include AccessGranted::Policy
 
   def configure(user)
-  
+
     # The most important admin role, gets checked first
-    
+
     role :admin, { is_admin: true } do
       can :manage, Post
       can :manage, Comment
@@ -97,7 +101,7 @@ end
 
 This role will allow everyone (since we didn't supply a matcher) to read and create posts.
 
-But now we want to let admins delete those posts (for example spam posts). 
+But now we want to let admins delete those posts (for example spam posts).
 In this case we create a new role above the `:member` to add more permissions for the admin:
 
 ```ruby
@@ -119,7 +123,7 @@ So, if the user has an attribute `is_admin` set to `true`, then the role will be
 #### Hash conditions
 
 Hashes can be used as matchers as a check if action is permitted.
-For example, we may allow users to only see published posts, like this: 
+For example, we may allow users to only see published posts, like this:
 
 ```ruby
 role :member do
@@ -129,7 +133,7 @@ end
 
 #### Block conditions
 
-"But wait! User should also be able to edit his posts, and only his posts!" you are wondering. 
+"But wait! User should also be able to edit his posts, and only his posts!" you are wondering.
 This can be done using a block condition in `can` method, like this:
 
 ```ruby
@@ -140,7 +144,7 @@ role :member do
 end
 ```
 
-When the given block evaluates to `true`, the user is then given the permission to update the post. 
+When the given block evaluates to `true`, the user is then given the permission to update the post.
 
 #### Roles in order of importance
 
@@ -159,7 +163,7 @@ role :member do
 end
 ```
 
-As stated before: **`:admin` role takes precedence over `:member`** role, so when AccessGranted sees that admin can update all posts, it stops looking at the less important roles. 
+As stated before: **`:admin` role takes precedence over `:member`** role, so when AccessGranted sees that admin can update all posts, it stops looking at the less important roles.
 
 That way you can keep a tidy and readable policy file which is basically human readable.
 
