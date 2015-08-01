@@ -16,18 +16,19 @@ Guaranteed to work on all major Ruby versions MRI 1.9.3-2.2, Rubinius >= 2.X and
 
 ## Summary
 
-AccessGranted is meant as a replacement for CanCan to solve three major problems:
+AccessGranted is meant as a replacement for CanCan to solve major problems:
 
 1. Performance
+
   On average AccessGranted is 50-60% faster in resolving identical dependencies and takes less memory.
   See [benchmarks](https://github.com/chaps-io/access-granted/blob/master/benchmarks).
 
-2. Built-in support for user roles
+2. Roles
 
-  Easy to read access policy code where permissions are cleanly grouped into roles.
-  Additionally, permissions are forced to be unique in the scope of a role. This greatly simplifies resolving permissions and makes it faster.
+  Adds support for roles, so no more `if`s and `else`s in your Policy file. This makes it extremely easy to   
+  maintain and read the code.
 
-3. white-list based
+3. white-lists
 
   This means that you define what the user **can** do, which results in clean, readable policies regardless of app complexity.
   You don't have to worry about juggling `can`s and `cannot`s in a very convoluted way!
