@@ -41,9 +41,8 @@ AccessGranted is meant as a replacement for CanCan to solve three major problems
 
 Roles are defined using blocks (or by passing custom classes to keep things tidy).
 
-Order of the roles is important, because they are being traversed in the top-to-bottom order.
-
-Generally at the top you will have an admin or other important role giving the user top permissions, and as you go down you define less-privileged roles.
+**Order of the roles is VERY important**, because they are being traversed in the top-to-bottom order.
+At the top you must have an admin or other important role giving the user top permissions, and as you go down you define less-privileged roles.
 
 ### 1. Defining access policy
 
@@ -56,49 +55,23 @@ class AccessPolicy
   include AccessGranted::Policy
 
   def configure(user)
-
-    # The most important role prohibiting banned
-    # users from doing anything.
-    # (even if they are moderators or admins)
-
-    role :banned, { is_banned: true } do
-      cannot [:create, :update, :destroy], Post
-
-      # :manage is just a shortcut for `[:read, :create, :update, :destroy]`
-      cannot :manage, Comment
-    end
-
+  
+    # The most important admin role, gets checked first
+    
     role :admin, { is_admin: true } do
       can :manage, Post
       can :manage, Comment
     end
 
-    # You can also use Procs to determine
-    # if the role should apply to a given user.
-
+    # Less privileged moderator role
     role :moderator, proc {|u| u.moderator? } do
-      # takes precedence over :update/:destroy
-      # permissions defined in member role below
-      # and lets moderators edit and delete all posts
-
       can [:update, :destroy], Post
-
-      # and a new permission which lets moderators
-      # modify user accounts
-
       can :update, User
     end
 
     # The basic role. Applies to every user.
-
     role :member do
       can :create, Post
-
-      # For more advanced permissions
-      # you can use blocks or hashes.
-      # Hashconditions should be used for
-      # simple checks of attributes, while
-      # blocks to run additional code with custom logic.
 
       can [:update, :destroy], Post do |post|
         post.user_id == user.id && post.comments.empty?
@@ -107,9 +80,92 @@ class AccessPolicy
   end
 end
 ```
+
+#### Defining roles
+
+Each `role` method accepts the name of the role you're creating and an optional matcher.
+Matchers are used to check if user belongs to that role and if the permissions inside should be executed against him.
+
+The simplest role can be defined as follows:
+
+```ruby
+role :member do
+  can :read, Post
+  can :create, Post
+end
+```
+
+This role will allow everyone (since we didn't supply a matcher) to read and create posts.
+
+But now we want to let admins delete those posts (for example spam posts). 
+In this case we create a new role above the `:member` to add more permissions for the admin:
+
+```ruby
+role :admin, { is_admin: true } do
+  can :destroy, Post
+end
+
+role :member do
+  can :read, Post
+  can :create, Post
+end
+```
+
+The `{ is_admin: true }` hash is compared with the user's attributes to see if the role should be applied to him.
+So, if the user has an attribute `is_admin` set to `true`, then the role will be applied to him.
+
+**Note:** you can use more keys in the hash to check many attributes at once.
+
+#### Hash conditions
+
+Hashes can be used as matchers as a check if action is permitted.
+For example, we may allow users to only see published posts, like this: 
+
+```ruby
+role :member do
+  can :read, Post, { published: true }
+end
+```
+
+#### Block conditions
+
+"But wait! User should also be able to edit his posts, and only his posts!" you are wondering. 
+This can be done using a block condition in `can` method, like this:
+
+```ruby
+role :member do
+  can :update, Post do |post|
+    post.author_id == user.id
+  end
+end
+```
+
+When the given block evaluates to `true`, the user is then given the permission to update the post. 
+
+#### Roles in order of importance
+
+Additionally we can allow admins to update **all** posts despite them not being authors like this:
+
+
+```ruby
+role :admin, { is_admin: true } do
+  can :update, Post
+end
+
+role :member do
+  can :update, Post do |post|
+    post.author_id == user.id
+  end
+end
+```
+
+As stated before: **`:admin` role takes precedence over `:member`** role, so when AccessGranted sees that admin can update all posts, it stops looking at the less important roles. 
+
+That way you can keep a tidy and readable policy file which is basically human readable.
+
 ### Using in Rails
 
-AccessGranted comes with a set of helpers available in Rails apps:
+AccessGranted comes with a set of helpers available in Ruby on Rails apps:
 
 #### Authorizing controller actions
 
@@ -125,12 +181,13 @@ class PostsController
     # (...)
   end
 end
+```
 
 `authorize!` throws an exception when current user doesn't have a given permission.
 You can rescue from it using `rescue_from`:
 
 ```ruby
-class ApplicationController
+class ApplicationController < ActionController::Base
   rescue_from "AccessGranted::AccessDenied" do |exception|
     redirect_to root_path, alert: "You don't have permissions to access this page."
   end
@@ -200,15 +257,15 @@ with `can?`:
 
 ```ruby
 policy.can?(:create, Post) #=> true
+policy.can?(:update, @post) #=> false
 ```
 
 or with `cannot?`:
 
 ```ruby
 policy.cannot?(:create, Post) #=> false
+policy.cannot?(:update, @ost) #=> true
 ```
-
-
 
 ## Common examples
 
