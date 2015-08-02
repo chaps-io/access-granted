@@ -25,7 +25,7 @@ AccessGranted is meant as a replacement for CanCan to solve major problems:
 
 2. Roles
 
-  Adds support for roles, so no more `if`'s and `else`'s in your Policy cide. This makes it extremely easy to maintain and read the code.
+  Adds support for roles, so no more `if`'s and `else`'s in your Policy file. This makes it extremely easy to maintain and read the code.
   
 3. white-lists
 
