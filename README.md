@@ -218,6 +218,7 @@ class UsersController
     # (...)
   end
 end
+```
 
 #### Checking permissions in views
 
