@@ -20,7 +20,7 @@ AccessGranted is meant as a replacement for CanCan to solve major problems:
 
 1. Performance
 
-  On average AccessGranted is 50-60% faster in resolving identical dependencies and takes less memory.
+  On average AccessGranted is 50-60% faster in resolving identical permissions and takes less memory.
   See [benchmarks](https://github.com/chaps-io/access-granted/blob/master/benchmarks).
 
 2. Roles
