@@ -13,3 +13,9 @@ if defined? ActionController::Base
     include AccessGranted::Rails::ControllerMethods
   end
 end
+
+if defined? ActionController::API
+  ActionController::API.class_eval do
+    include AccessGranted::Rails::ControllerMethods
+  end
+end
