@@ -37,7 +37,7 @@ AccessGranted is meant as a replacement for CanCan to solve major problems:
 4. framework agnostic
 
   Permissions can work on basically any object and AccessGranted is framework-agnostic,
-  but it has Rails support of out the box :)
+  but it has Rails support out of the box :)
   It **does not depend on any libraries**, pure and clean Ruby code. Guaranteed to always work,
   even when software around changes.
 
