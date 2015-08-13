@@ -12,7 +12,7 @@ Multi-role and whitelist based authorization gem for Rails. And it's lightweight
 
 ### Supported Ruby versions
 
-Guaranteed to work on all major Ruby versions MRI 1.9.3-2.2, Rubinius >= 2.X and JRuby >= 1.7.
+Because it has **zero** runtime dependencies it is guaranteed to work on all major Ruby versions MRI 1.9.3-2.2, Rubinius >= 2.X and JRuby >= 1.7.
 
 ## Summary
 
