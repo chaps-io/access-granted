@@ -12,22 +12,22 @@ Multi-role and whitelist based authorization gem for Rails. And it's lightweight
 
 ### Supported Ruby versions
 
-Guaranteed to work on all major Ruby versions MRI 1.9.3-2.2, Rubinius >= 2.X and JRuby >= 1.7.
+Because it has **zero** runtime dependencies it is guaranteed to work on all major Ruby versions MRI 1.9.3-2.2, Rubinius >= 2.X and JRuby >= 1.7.
 
 ## Summary
 
-AccessGranted is meant as a replacement for CanCan to solve three major problems:
+AccessGranted is meant as a replacement for CanCan to solve major problems:
 
 1. Performance
-  On average AccessGranted is 50-60% faster in resolving identical dependencies and takes less memory.
+
+  On average AccessGranted is 50-60% faster in resolving identical permissions and takes less memory.
   See [benchmarks](https://github.com/chaps-io/access-granted/blob/master/benchmarks).
 
-2. Built-in support for user roles
+2. Roles
 
-  Easy to read access policy code where permissions are cleanly grouped into roles.
-  Additionally, permissions are forced to be unique in the scope of a role. This greatly simplifies resolving permissions and makes it faster.
-
-3. white-list based
+  Adds support for roles, so no more `if`'s and `else`'s in your Policy file. This makes it extremely easy to maintain and read the code.
+  
+3. white-lists
 
   This means that you define what the user **can** do, which results in clean, readable policies regardless of app complexity.
   You don't have to worry about juggling `can`s and `cannot`s in a very convoluted way!
@@ -37,7 +37,7 @@ AccessGranted is meant as a replacement for CanCan to solve three major problems
 4. framework agnostic
 
   Permissions can work on basically any object and AccessGranted is framework-agnostic,
-  but it has Rails support of out the box :)
+  but it has Rails support out of the box :)
   It **does not depend on any libraries**, pure and clean Ruby code. Guaranteed to always work,
   even when software around changes.
 
@@ -88,7 +88,7 @@ end
 #### Defining roles
 
 Each `role` method accepts the name of the role you're creating and an optional matcher.
-Matchers are used to check if user belongs to that role and if the permissions inside should be executed against him.
+Matchers are used to check if user belongs to that role and if the permissions inside should be executed against it.
 
 The simplest role can be defined as follows:
 
@@ -115,8 +115,8 @@ role :member do
 end
 ```
 
-The `{ is_admin: true }` hash is compared with the user's attributes to see if the role should be applied to him.
-So, if the user has an attribute `is_admin` set to `true`, then the role will be applied to him.
+The `{ is_admin: true }` hash is compared with the user's attributes to see if the role should be applied to it.
+So, if the user has an attribute `is_admin` set to `true`, then the role will be applied to it.
 
 **Note:** you can use more keys in the hash to check many attributes at once.
 
@@ -133,8 +133,8 @@ end
 
 #### Block conditions
 
-"But wait! User should also be able to edit his posts, and only his posts!" you are wondering.
-This can be done using a block condition in `can` method, like this:
+"But wait! User should also be able to edit his posts, and only his posts!", you are wondering.
+This can be done using a block condition in `can` method, like so:
 
 ```ruby
 role :member do
@@ -144,11 +144,11 @@ role :member do
 end
 ```
 
-When the given block evaluates to `true`, the user is then given the permission to update the post.
+When the given block evaluates to `true`, then user is given the permission to update the post.
 
 #### Roles in order of importance
 
-Additionally we can allow admins to update **all** posts despite them not being authors like this:
+Additionally, we can allow admins to update **all** posts despite them not being authors like so:
 
 
 ```ruby
@@ -218,6 +218,7 @@ class UsersController
     # (...)
   end
 end
+```
 
 #### Checking permissions in views
 
@@ -234,7 +235,7 @@ You can hide any part of the page from users without permissions like this:
 
 #### Customizing policy
 
-By default AccessGranted adds this method to your controllers:
+By default, AccessGranted adds this method to your controllers:
 
 ```ruby
   def current_policy
@@ -242,7 +243,7 @@ By default AccessGranted adds this method to your controllers:
   end
 ```
 
-If you have a different policy class or if your user is not stored in `current_user` variable, then you can override it in any controllers and modify the logic as you please.
+If you have a different policy class or if your user is not stored in `current_user` variable, then you can override it in any controller and modify the logic as you please.
 
 You can even have different policies for different controllers!
 
@@ -311,7 +312,7 @@ end
 
 ## Compatibility with CanCan
 
-This gem was created as a replacement for CanCan and therefore it requires minimum work to switch.
+This gem has been created as a replacement for CanCan and therefore it requires minimum work to switch.
 
 ### Main differences
 
@@ -322,10 +323,10 @@ This gem was created as a replacement for CanCan and therefore it requires minim
 
 2. Both `can?`/`cannot?` and `authorize!` methods work in Rails controllers and views, just like in CanCan.
    The only change you have to make is to replace all `can? :manage, Class` with the exact action to check against.
-   `can :manage` is still available for **defining** methods and serves as a shortcut for defining `:read`, `:create`, `:update`, `:destroy` all in one line.
+   `can :manage` is still available for **defining** methods and serves as a shortcut for defining `:create`, `:read`, `:update`, `:destroy` all in one line.
 
 3. Syntax for defining permissions in AccessPolicy file (Ability in CanCan) is exactly the same,
-   with added roles on top. See [Usage](#usage) below.
+   with roles added on top. See [Usage](#usage) below.
 
 
 ## Contributing

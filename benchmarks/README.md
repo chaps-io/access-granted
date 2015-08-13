@@ -1,6 +1,6 @@
 # Benchmark results
 
-Benchmarks ran on Ubuntu 15.10 64bit, i5 2500k @ 4.4Ghz, 16 GB RAM with Ruby 2.2.
+Benchmarks ran on Ubuntu 15.04 64bit, i5 2500k @ 4.4Ghz, 16 GB RAM with Ruby 2.2.
 
 ## permissions.rb
 
