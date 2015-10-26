@@ -2,8 +2,9 @@ module AccessGranted
   class Permission
     attr_reader :action, :subject, :granted, :conditions
 
-    def initialize(granted, action, subject, conditions = {}, block = nil)
+    def initialize(granted, action, subject, user = nil, conditions = {}, block = nil)
       @action     = action
+      @user       = user
       @granted    = granted
       @subject    = subject
       @conditions = conditions
@@ -20,7 +21,7 @@ module AccessGranted
 
     def matches_conditions?(subject)
       if @block
-        @block.call(subject)
+        @block.call(subject, @user)
       else
         matches_hash_conditions?(subject)
       end

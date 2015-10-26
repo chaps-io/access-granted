@@ -5,10 +5,10 @@ module AccessGranted
     def initialize(user)
       @user          = user
       @roles         = []
-      configure(@user)
+      configure
     end
 
-    def configure(user)
+    def configure
     end
 
     def role(name, conditions_or_klass = nil, conditions = nil, &block)

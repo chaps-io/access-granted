@@ -12,11 +12,32 @@ describe AccessGranted::Policy do
       @banned = double("banned",        id: 4, is_moderator: false, is_admin: true,  is_banned: true)
     end
 
+    it "passes user object to permission block" do
+      post_owner = double(id: 123)
+      other_user = double(id: 5)
+      post = FakePost.new(post_owner.id)
+
+      klass = Class.new do
+        include AccessGranted::Policy
+
+        def configure
+          role :member do
+            can :destroy, FakePost do |post, user|
+              post.user_id == user.id
+            end
+          end
+        end
+      end
+
+      expect(klass.new(post_owner).can?(:destroy, post)).to     eq(true)
+      expect(klass.new(other_user).can?(:destroy, post)).to     eq(false)
+    end
+
     it "selects permission based on role priority" do
       klass = Class.new do
         include AccessGranted::Policy
 
-        def configure(user)
+        def configure
           role :administrator, { is_admin: true } do
             can :destroy, String
           end
@@ -48,20 +69,24 @@ describe AccessGranted::Policy do
         klass = Class.new do
           include AccessGranted::Policy
 
-          def configure(user)
+          def configure
             role :administrator, { is_admin: true } do
               can :destroy, FakePost
             end
 
             role :member do
-              can :destroy, FakePost, user_id: user.id
+              can :destroy, FakePost do |post, user|
+                post.user_id == user.id
+              end
             end
           end
         end
 
-       expect(klass.new(@admin).can?(:destroy, user_post)).to eq(true)
-       expect(klass.new(@member).can?(:destroy, user_post)).to eq(true)
-       expect(klass.new(@member).cannot?(:destroy, other_post)).to eq(true)
+       expect(klass.new(@admin).can?(:destroy, user_post)).to       eq(true)
+       expect(klass.new(@admin).can?(:destroy, other_post)).to      eq(true)
+
+       expect(klass.new(@member).can?(:destroy, user_post)).to      eq(true)
+       expect(klass.new(@member).cannot?(:destroy, other_post)).to  eq(true)
       end
     end
 
@@ -69,7 +94,7 @@ describe AccessGranted::Policy do
       klass = Class.new do
         include AccessGranted::Policy
 
-        def configure(user)
+        def configure
           role :member do
             can :vague_action
           end
@@ -84,7 +109,7 @@ describe AccessGranted::Policy do
         klass = Class.new do
           include AccessGranted::Policy
 
-          def configure(user)
+          def configure
             role :banned, { is_banned: true } do
               cannot :create, String
             end
@@ -104,7 +129,7 @@ describe AccessGranted::Policy do
         Class.new do
           include AccessGranted::Policy
 
-          def configure(user)
+          def configure
             role(:member) { can :create, String }
           end
         end
@@ -123,7 +148,7 @@ describe AccessGranted::Policy do
   describe "#role" do
     it "allows passing role class" do
       klass_role = Class.new AccessGranted::Role do
-        def configure(user)
+        def configure
           can :read, String
         end
       end

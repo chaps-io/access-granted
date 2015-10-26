@@ -12,11 +12,11 @@ module AccessGranted
       if @block
         instance_eval(&@block)
       else
-        configure(@user)
+        configure
       end
     end
 
-    def configure(user)
+    def configure
     end
 
     def can(action, subject = nil, conditions = {}, &block)
@@ -53,7 +53,7 @@ module AccessGranted
     def add_permission(granted, action, subject, conditions, block)
       prepare_actions(action).each do |a|
         raise DuplicatePermission if permission_exists?(a, subject)
-        @permissions << Permission.new(granted, a, subject, conditions, block)
+        @permissions << Permission.new(granted, a, subject, @user, conditions, block)
         @permissions_by_action[a] ||= []
         @permissions_by_action[a]  << @permissions.size - 1
       end

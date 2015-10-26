@@ -28,7 +28,7 @@ describe AccessGranted::Rails::ControllerMethods do
       klass = Class.new do
         include AccessGranted::Policy
 
-        def configure(user)
+        def configure
           role :member, 1 do
             can :read, String
           end
