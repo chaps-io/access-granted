@@ -26,7 +26,7 @@ AccessGranted is meant as a replacement for CanCan to solve major problems:
 2. Roles
 
   Adds support for roles, so no more `if`'s and `else`'s in your Policy file. This makes it extremely easy to maintain and read the code.
-  
+
 3. white-lists
 
   This means that you define what the user **can** do, which results in clean, readable policies regardless of app complexity.
@@ -58,8 +58,7 @@ Let's start with a complete example of what can be achieved:
 class AccessPolicy
   include AccessGranted::Policy
 
-  def configure(user)
-
+  def configure
     # The most important admin role, gets checked first
 
     role :admin, { is_admin: true } do
@@ -77,8 +76,8 @@ class AccessPolicy
     role :member do
       can :create, Post
 
-      can [:update, :destroy], Post do |post|
-        post.user_id == user.id && post.comments.empty?
+      can [:update, :destroy], Post do |post, user|
+        post.author == user && post.comments.empty?
       end
     end
   end
@@ -133,12 +132,12 @@ end
 
 #### Block conditions
 
-"But wait! User should also be able to edit his posts, and only his posts!", you are wondering.
-This can be done using a block condition in `can` method, like so:
+Sometimes you may need to dynamically check for ownership or other conditions,
+this can be done using a block condition in `can` method, like so:
 
 ```ruby
 role :member do
-  can :update, Post do |post|
+  can :update, Post do |post, user|
     post.author_id == user.id
   end
 end
@@ -157,7 +156,7 @@ role :admin, { is_admin: true } do
 end
 
 role :member do
-  can :update, Post do |post|
+  can :update, Post do |post, user|
     post.author_id == user.id
   end
 end
@@ -284,7 +283,7 @@ Below you can see an extracted `:member` role:
 class AccessPolicy
   include AccessGranted::Policy
 
-  def configure(user)
+  def configure
     role :administrator, is_admin: true do
       can :manage, User
     end
@@ -301,9 +300,9 @@ And roles should look like this
 # app/roles/member_role.rb
 
 class MemberRole < AccessGranted::Role
-  def configure(user)
+  def configure
     can :create, Post
-    can :destroy, Post do |post|
+    can :destroy, Post do |post, user|
       post.author == user
     end
   end
