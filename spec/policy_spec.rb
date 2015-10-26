@@ -64,6 +64,21 @@ describe AccessGranted::Policy do
        expect(klass.new(@member).cannot?(:destroy, other_post)).to eq(true)
       end
     end
+
+    it "resolves permissions without subject" do
+      klass = Class.new do
+        include AccessGranted::Policy
+
+        def configure(user)
+          role :member do
+            can :vague_action
+          end
+        end
+      end
+
+      expect(klass.new(@member).can?(:vague_action)).to eq(true)
+    end
+
     describe "#cannot" do
       it "forbids action when used in superior role" do
         klass = Class.new do
@@ -95,7 +110,7 @@ describe AccessGranted::Policy do
         end
       end
 
-      it "raises AccessDenied if actions is not allowed" do
+      it "raises AccessDenied if action is not allowed" do
         expect { klass.new(@member).authorize!(:create, Integer) }.to raise_error AccessGranted::AccessDenied
       end
 

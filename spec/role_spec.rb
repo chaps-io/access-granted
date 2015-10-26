@@ -42,6 +42,11 @@ describe AccessGranted::Role do
       @role = AccessGranted::Role.new(:member)
     end
 
+    it "allows adding permission without subject" do
+      @role.can :vague_action
+      expect(@role.find_permission(:vague_action, nil)).to_not be_nil
+    end
+
     it "forbids creating actions with the same name" do
       @role.can :read, String
       expect { @role.can :read, String }.to raise_error AccessGranted::DuplicatePermission

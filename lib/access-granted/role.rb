@@ -19,7 +19,7 @@ module AccessGranted
     def configure(user)
     end
 
-    def can(action, subject, conditions = {}, &block)
+    def can(action, subject = nil, conditions = {}, &block)
       add_permission(true, action, subject, conditions, block)
     end
 

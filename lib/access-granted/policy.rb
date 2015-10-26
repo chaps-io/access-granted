@@ -25,7 +25,7 @@ module AccessGranted
       r
     end
 
-    def can?(action, subject)
+    def can?(action, subject = nil)
       roles.each do |role|
         next unless role.applies_to?(@user)
         permission = role.find_permission(action, subject)
