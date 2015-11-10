@@ -10,7 +10,7 @@ class AccessPolicy
     # Roles inherit from less important roles, so:
     # - :admin has permissions defined in :member, :guest and himself
     # - :member has permissions from :guest and himself
-    # - :guest has only its own permissions since it's at the bottom
+    # - :guest has only its own permissions since it's the first role.
     #
     # The most important role should be at the top.
     # In this case an administrator.
