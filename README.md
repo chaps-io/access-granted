@@ -226,7 +226,7 @@ end
 Usually you don't want to show "Create" buttons for people who can't create something.
 You can hide any part of the page from users without permissions like this:
 
-```html
+```erb
 # app/views/categories/index.html.erb
 
 <% if can? :create, Category %>
