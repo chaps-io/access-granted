@@ -14,6 +14,12 @@ describe AccessGranted::Permission do
       perm = subject.new(true, :read, sub.class, nil, {}, proc {|el| el.published? })
       expect(perm.matches_conditions?(sub)).to eq(true)
     end
+
+    it "does not match proc conditions when given a class instead of an instance" do
+      sub = double("Element", published?: true)
+      perm = subject.new(true, :read, sub.class, nil, {}, proc {|el| el.published? })
+      expect(perm.matches_conditions?(sub.class)).to eq(true)
+    end
   end
 
   describe "#matches_hash_conditions?" do
