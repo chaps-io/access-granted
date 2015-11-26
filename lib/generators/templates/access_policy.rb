@@ -1,7 +1,7 @@
 class AccessPolicy
   include AccessGranted::Policy
 
-  def configure(user)
+  def configure
     # Example policy for AccessGranted.
     # For more details check the README at
     #
