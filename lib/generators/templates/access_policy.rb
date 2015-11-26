@@ -24,7 +24,7 @@ class AccessPolicy
     # role :member, proc { |user| user.registered? } do
     #   can :create, Post
     #   can :create, Comment
-    #   can [:update, :destroy], Post do |post|
+    #   can [:update, :destroy], Post do |post, user|
     #     post.author == user
     #   end
     # end
