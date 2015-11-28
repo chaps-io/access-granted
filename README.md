@@ -8,7 +8,13 @@ Multi-role and whitelist based authorization gem for Rails. And it's lightweight
 
 ## Installation
 
+Add the gem to your gemfile:
+    
     gem 'access-granted'
+    
+Run the bundle command to install it. Then run the generator:
+    
+    rails generate access_granted:policy
 
 ### Supported Ruby versions
 
