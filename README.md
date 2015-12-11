@@ -16,6 +16,10 @@ Run the bundle command to install it. Then run the generator:
     
     rails generate access_granted:policy
 
+Add the `policies` and `roles` directories to your autoload paths in `application.rb`:
+    
+    config.autoload_paths += %W(#{config.root}/app/policies #{config.root}/app/roles)
+
 ### Supported Ruby versions
 
 Because it has **zero** runtime dependencies it is guaranteed to work on all major Ruby versions MRI 1.9.3-2.2, Rubinius >= 2.X and JRuby >= 1.7.
