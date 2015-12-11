@@ -16,7 +16,7 @@ Run the bundle command to install it. Then run the generator:
     
     rails generate access_granted:policy
 
-Add the `policies` and `roles` directories to your autoload paths in `application.rb`:
+Add the `policies` (and `roles` if you're using it to split up your roles into files) directories to your autoload paths in `application.rb`:
     
     config.autoload_paths += %W(#{config.root}/app/policies #{config.root}/app/roles)
 
