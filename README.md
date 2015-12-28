@@ -3,17 +3,17 @@
 ## [![](http://i.imgur.com/ya8Wnyl.png)](https://chaps.io) proudly made by [Chaps](https://chaps.io)
 
 
-Multi-role and whitelist based authorization gem for Rails. And it's lightweight (~300 lines of code)!
+AccessGranted is a multi-role and whitelist based authorization gem for Rails. And it's lightweight (~300 lines of code)!
 
 
 ## Installation
 
 Add the gem to your gemfile:
-    
-    gem 'access-granted'
-    
+
+    gem 'access-granted', '~> 1.0.0'
+
 Run the bundle command to install it. Then run the generator:
-    
+
     rails generate access_granted:policy
 
 ### Supported Ruby versions
@@ -31,19 +31,19 @@ AccessGranted is meant as a replacement for CanCan to solve major problems:
 
 2. Roles
 
-  Adds support for roles, so no more `if`'s and `else`'s in your Policy file. This makes it extremely easy to maintain and read the code.
+  Adds support for roles, so no more `if`s and `else`s in your Policy file. This makes it extremely easy to maintain and read the code.
 
-3. white-lists
+3. Whitelists
 
   This means that you define what the user **can** do, which results in clean, readable policies regardless of app complexity.
   You don't have to worry about juggling `can`s and `cannot`s in a very convoluted way!
 
   _Note_: `cannot` is still available, but has a very specifc use. See [Usage](#usage) below.
 
-4. framework agnostic
+4. Framework agnostic
 
   Permissions can work on basically any object and AccessGranted is framework-agnostic,
-  but it has Rails support out of the box :)
+  but it has Rails support out of the box. :)
   It **does not depend on any libraries**, pure and clean Ruby code. Guaranteed to always work,
   even when software around changes.
 
@@ -51,12 +51,12 @@ AccessGranted is meant as a replacement for CanCan to solve major problems:
 
 Roles are defined using blocks (or by passing custom classes to keep things tidy).
 
-**Order of the roles is VERY important**, because they are being traversed in the top-to-bottom order.
-At the top you must have an admin or other important role giving the user top permissions, and as you go down you define less-privileged roles.
+**Order of the roles is VERY important**, because they are being traversed in top-to-bottom order.
+At the top you must have an admin or some other important role giving the user top permissions, and as you go down you define less-privileged roles.
 
 **I recommend starting your adventure by reading my [blog post about AccessGranted](http://blog.chaps.io/2015/11/13/role-based-authorization-in-rails.html), where I demonstrate its abilities on a real life example.**
 
-### 1. Defining access policy
+### Defining an access policy
 
 Let's start with a complete example of what can be achieved:
 
@@ -95,7 +95,7 @@ end
 #### Defining roles
 
 Each `role` method accepts the name of the role you're creating and an optional matcher.
-Matchers are used to check if user belongs to that role and if the permissions inside should be executed against it.
+Matchers are used to check if the user belongs to that role and if the permissions inside should be executed against it.
 
 The simplest role can be defined as follows:
 
@@ -129,7 +129,7 @@ So, if the user has an attribute `is_admin` set to `true`, then the role will be
 
 #### Hash conditions
 
-Hashes can be used as matchers as a check if action is permitted.
+Hashes can be used as matchers to check if an action is permitted.
 For example, we may allow users to only see published posts, like this:
 
 ```ruby
@@ -151,7 +151,7 @@ role :member do
 end
 ```
 
-When the given block evaluates to `true`, then user is given the permission to update the post.
+When the given block evaluates to `true`, then `user` is given the permission to update the post.
 
 #### Roles in order of importance
 
@@ -174,7 +174,7 @@ As stated before: **`:admin` role takes precedence over `:member`** role, so whe
 
 That way you can keep a tidy and readable policy file which is basically human readable.
 
-### Using in Rails
+### Usage with Rails
 
 AccessGranted comes with a set of helpers available in Ruby on Rails apps:
 
@@ -194,20 +194,20 @@ class PostsController
 end
 ```
 
-`authorize!` throws an exception when current user doesn't have a given permission.
+`authorize!` throws an exception when `current_user` doesn't have a given permission.
 You can rescue from it using `rescue_from`:
 
 ```ruby
 class ApplicationController < ActionController::Base
   rescue_from "AccessGranted::AccessDenied" do |exception|
-    redirect_to root_path, alert: "You don't have permissions to access this page."
+    redirect_to root_path, alert: "You don't have permission to access this page."
   end
 end
 ```
 
 #### Checking permissions in controllers
 
-To check if the user has a permission to perform an action, use `can?` and `cannot?` methods.
+To check if the user has a permission to perform an action, use the `can?` and `cannot?` methods.
 
 **Example:**
 
@@ -250,16 +250,15 @@ By default, AccessGranted adds this method to your controllers:
   end
 ```
 
-If you have a different policy class or if your user is not stored in `current_user` variable, then you can override it in any controller and modify the logic as you please.
+If you have a different policy class or if your user is not stored in the `current_user` variable, then you can override it in any controller and modify the logic as you please.
 
 You can even have different policies for different controllers!
 
-### Using in pure Ruby
+### Usage with pure Ruby
 
 Initialize the Policy class:
 
 ```ruby
-
 policy = AccessPolicy.new(current_user)
 ```
 
@@ -302,7 +301,7 @@ end
 
 ```
 
-And roles should look like this
+And roles should look like this:
 
 ```ruby
 # app/roles/member_role.rb
@@ -332,8 +331,8 @@ This gem has been created as a replacement for CanCan and therefore it requires 
    The only change you have to make is to replace all `can? :manage, Class` with the exact action to check against.
    `can :manage` is still available for **defining** methods and serves as a shortcut for defining `:create`, `:read`, `:update`, `:destroy` all in one line.
 
-3. Syntax for defining permissions in AccessPolicy file (Ability in CanCan) is exactly the same,
-   with roles added on top. See [Usage](#usage) below.
+3. Syntax for defining permissions in the AccessPolicy file (Ability in CanCan) is exactly the same,
+   with roles added on top. See [Usage](#usage) above.
 
 
 ## Contributing
@@ -342,4 +341,4 @@ This gem has been created as a replacement for CanCan and therefore it requires 
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+5. Create new pull request
