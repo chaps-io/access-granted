@@ -10,8 +10,9 @@ AccessGranted is a multi-role and whitelist based authorization gem for Rails. A
 
 Add the gem to your gemfile:
 
-    gem 'access-granted', '~> 1.0.0'
-
+```ruby
+gem 'access-granted', '~> 1.0.0'
+```
 Run the bundle command to install it. Then run the generator:
 
     rails generate access_granted:policy
