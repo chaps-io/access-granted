@@ -8,8 +8,10 @@ group :test, :development do
   gem 'simplecov', require: false
   gem 'rake'
   gem 'pry'
+  gem 'cancan'
+  gem 'benchmark-ips'
 end
 
 platforms :rbx do
-  gem 'rubysl', '~> 2.0'
+  gem 'rubysl', '~> 2.1'
 end

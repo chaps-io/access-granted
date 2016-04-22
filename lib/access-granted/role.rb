@@ -12,14 +12,14 @@ module AccessGranted
       if @block
         instance_eval(&@block)
       else
-        configure(@user)
+        configure
       end
     end
 
-    def configure(user)
+    def configure
     end
 
-    def can(action, subject, conditions = {}, &block)
+    def can(action, subject = nil, conditions = {}, &block)
       add_permission(true, action, subject, conditions, block)
     end
 
@@ -28,8 +28,8 @@ module AccessGranted
     end
 
     def find_permission(action, subject)
-      relevant_permissions(action, subject).detect do |permission|
-        permission.matches_conditions?(subject)
+      permissions_by_action(action).detect do |permission|
+        permission.matches_subject?(subject) && permission.matches_conditions?(subject)
       end
     end
 
@@ -44,12 +44,6 @@ module AccessGranted
       end
     end
 
-    def relevant_permissions(action, subject)
-      permissions_by_action(action).select do |perm|
-        perm.matches_subject?(subject)
-      end
-    end
-
     def matches_hash?(user, conditions = {})
       conditions.all? do |name, value|
         user.send(name) == value
@@ -58,8 +52,8 @@ module AccessGranted
 
     def add_permission(granted, action, subject, conditions, block)
       prepare_actions(action).each do |a|
-        raise DuplicatePermission if relevant_permissions(a, subject).any?
-        @permissions << Permission.new(granted, a, subject, conditions, block)
+        raise DuplicatePermission if permission_exists?(a, subject)
+        @permissions << Permission.new(granted, a, subject, @user, conditions, block)
         @permissions_by_action[a] ||= []
         @permissions_by_action[a]  << @permissions.size - 1
       end
@@ -67,11 +61,17 @@ module AccessGranted
 
     private
 
+    def permission_exists?(action, subject)
+      permissions_by_action(action).any? do |permission|
+        permission.matches_subject?(subject)
+      end
+    end
+
     def prepare_actions(action)
       if action == :manage
         actions = [:read, :create, :update, :destroy, :manage]
       else
-        actions = [action].flatten
+        actions = Array(*[action])
       end
     end
 

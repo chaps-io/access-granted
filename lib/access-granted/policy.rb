@@ -5,10 +5,10 @@ module AccessGranted
     def initialize(user)
       @user          = user
       @roles         = []
-      configure(@user)
+      configure
     end
 
-    def configure(user)
+    def configure
     end
 
     def role(name, conditions_or_klass = nil, conditions = nil, &block)
@@ -25,8 +25,9 @@ module AccessGranted
       r
     end
 
-    def can?(action, subject)
-      matching_roles.each do |role|
+    def can?(action, subject = nil)
+      roles.each do |role|
+        next unless role.applies_to?(@user)
         permission = role.find_permission(action, subject)
         return permission.granted if permission
       end
@@ -35,10 +36,6 @@ module AccessGranted
 
     def cannot?(*args)
       !can?(*args)
-    end
-
-    def matching_roles
-      roles.select { |role| role.applies_to?(@user) }
     end
 
     def authorize!(action, subject)
