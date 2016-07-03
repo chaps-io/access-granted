@@ -27,7 +27,7 @@ AccessGranted is meant as a replacement for CanCan to solve major problems:
 
 1. Performance
 
-  On average AccessGranted is 50-60% faster in resolving identical permissions and takes less memory.
+  On average AccessGranted is **20 times faster** in resolving identical permissions and takes less memory.
   See [benchmarks](https://github.com/chaps-io/access-granted/blob/master/benchmarks).
 
 2. Roles
@@ -36,7 +36,7 @@ AccessGranted is meant as a replacement for CanCan to solve major problems:
 
 3. Whitelists
 
-  This means that you define what the user **can** do, which results in clean, readable policies regardless of app complexity.
+  This means that you define what the user can do, which results in clean, readable policies regardless of application complexity.
   You don't have to worry about juggling `can`s and `cannot`s in a very convoluted way!
 
   _Note_: `cannot` is still available, but has a very specifc use. See [Usage](#usage) below.
@@ -45,7 +45,7 @@ AccessGranted is meant as a replacement for CanCan to solve major problems:
 
   Permissions can work on basically any object and AccessGranted is framework-agnostic,
   but it has Rails support out of the box. :)
-  It **does not depend on any libraries**, pure and clean Ruby code. Guaranteed to always work,
+  It does not depend on any libraries, pure and clean Ruby code. Guaranteed to always work,
   even when software around changes.
 
 ## Usage
