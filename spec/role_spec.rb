@@ -4,20 +4,11 @@ describe AccessGranted::Role do
   subject { AccessGranted::Role }
 
   it "requires a role name" do
-    expect { subject.new }.to raise_error
+    expect { subject.new }.to raise_error(ArgumentError)
   end
 
   it "creates a default role without conditions" do
     expect(subject.new(:member).conditions).to be_nil
-  end
-
-  describe "#relevant_permissions?" do
-    it "returns only matching permissions" do
-      role = subject.new(:member)
-      role.can :read, String
-      role.can :read, Hash
-      expect(role.relevant_permissions(:read, String)).to eq([AccessGranted::Permission.new(true, :read, String)])
-    end
   end
 
   describe "#applies_to?" do
@@ -49,6 +40,11 @@ describe AccessGranted::Role do
   describe "#can" do
     before :each do
       @role = AccessGranted::Role.new(:member)
+    end
+
+    it "allows adding permission without subject" do
+      @role.can :vague_action
+      expect(@role.find_permission(:vague_action, nil)).to_not be_nil
     end
 
     it "forbids creating actions with the same name" do

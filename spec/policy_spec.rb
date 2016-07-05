@@ -6,17 +6,38 @@ describe AccessGranted::Policy do
 
   describe "#configure" do
     before :each do
-      @member = double("member",        id: 1, is_moderator: false, is_admin: false, is_banned: false)
-      @mod    = double("moderator",     id: 2, is_moderator: true,  is_admin: false, is_banned: false)
-      @admin  = double("administrator", id: 3, is_moderator: false, is_admin: true,  is_banned: false)
-      @banned = double("banned",        id: 4, is_moderator: false, is_admin: true,  is_banned: true)
+      @member = FakeUser.new(1, false, false, false)
+      @mod    = FakeUser.new(2, true, false, false)
+      @admin  = FakeUser.new(3, false, true, false)
+      @banned = FakeUser.new(4, false, true, true)
+    end
+
+    it "passes user object to permission block" do
+      post_owner = double(id: 123)
+      other_user = double(id: 5)
+      post = FakePost.new(1, post_owner.id)
+
+      klass = Class.new do
+        include AccessGranted::Policy
+
+        def configure
+          role :member do
+            can :destroy, FakePost do |post, user|
+              post.user_id == user.id
+            end
+          end
+        end
+      end
+
+      expect(klass.new(post_owner).can?(:destroy, post)).to     eq(true)
+      expect(klass.new(other_user).can?(:destroy, post)).to     eq(false)
     end
 
     it "selects permission based on role priority" do
       klass = Class.new do
         include AccessGranted::Policy
 
-        def configure(user)
+        def configure
           role :administrator, { is_admin: true } do
             can :destroy, String
           end
@@ -60,34 +81,53 @@ describe AccessGranted::Policy do
 
     context "when multiple roles define the same permission" do
       it "checks all roles until conditions are met" do
-        user_post = FakePost.new(@member.id)
-        other_post = FakePost.new(66)
+        user_post = FakePost.new(1, @member.id)
+        other_post = FakePost.new(2, 66)
 
         klass = Class.new do
           include AccessGranted::Policy
 
-          def configure(user)
+          def configure
             role :administrator, { is_admin: true } do
               can :destroy, FakePost
             end
 
             role :member do
-              can :destroy, FakePost, user_id: user.id
+              can :destroy, FakePost do |post, user|
+                post.user_id == user.id
+              end
             end
           end
         end
 
-       expect(klass.new(@admin).can?(:destroy, user_post)).to eq(true)
-       expect(klass.new(@member).can?(:destroy, user_post)).to eq(true)
-       expect(klass.new(@member).cannot?(:destroy, other_post)).to eq(true)
+       expect(klass.new(@admin).can?(:destroy, user_post)).to       eq(true)
+       expect(klass.new(@admin).can?(:destroy, other_post)).to      eq(true)
+
+       expect(klass.new(@member).can?(:destroy, user_post)).to      eq(true)
+       expect(klass.new(@member).cannot?(:destroy, other_post)).to  eq(true)
       end
     end
+
+    it "resolves permissions without subject" do
+      klass = Class.new do
+        include AccessGranted::Policy
+
+        def configure
+          role :member do
+            can :vague_action
+          end
+        end
+      end
+
+      expect(klass.new(@member).can?(:vague_action)).to eq(true)
+    end
+
     describe "#cannot" do
       it "forbids action when used in superior role" do
         klass = Class.new do
           include AccessGranted::Policy
 
-          def configure(user)
+          def configure
             role :banned, { is_banned: true } do
               cannot :create, String
             end
@@ -98,7 +138,7 @@ describe AccessGranted::Policy do
           end
         end
         expect(klass.new(@member).can?(:create, String)).to    eq(true)
-        expect(klass.new(@banned).cannot?(:create, String)).to eq(true)
+        expect(klass.new(@banned).can?(:create, String)).to    eq(false)
       end
     end
 
@@ -107,13 +147,13 @@ describe AccessGranted::Policy do
         Class.new do
           include AccessGranted::Policy
 
-          def configure(user)
+          def configure
             role(:member) { can :create, String }
           end
         end
       end
 
-      it "raises AccessDenied if actions is not allowed" do
+      it "raises AccessDenied if action is not allowed" do
         expect { klass.new(@member).authorize!(:create, Integer) }.to raise_error AccessGranted::AccessDenied
       end
 
@@ -126,7 +166,7 @@ describe AccessGranted::Policy do
   describe "#role" do
     it "allows passing role class" do
       klass_role = Class.new AccessGranted::Role do
-        def configure(user)
+        def configure
           can :read, String
         end
       end
