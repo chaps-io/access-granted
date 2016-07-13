@@ -21,7 +21,7 @@ module AccessGranted
     def apply_conditions(subject)
       criteria = subject
       criteria = criteria.where(conditions)
-      criteria = @block.call(@user, criteria) if @block
+      criteria = @block.call(criteria, @user) if @block
       criteria
     end
 
