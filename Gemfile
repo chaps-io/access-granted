@@ -10,6 +10,7 @@ group :test, :development do
   gem 'pry'
   gem 'cancan'
   gem 'benchmark-ips'
+  gem 'rubocop'
 end
 
 platforms :rbx do

@@ -6,7 +6,7 @@ module AccessGranted
       end
 
       def self.included(base)
-        base.helper_method :can?, :cannot?, :current_policy if base.respond_to? :helper_method
+        base.helper_method :can?, :cannot?, :current_policy, :resolve if base.respond_to? :helper_method
       end
 
       def can?(*args)
@@ -19,6 +19,10 @@ module AccessGranted
 
       def authorize!(*args)
         current_policy.authorize!(*args)
+      end
+
+      def resolve(*args)
+        current_policy.resolve(*args)
       end
     end
   end

@@ -1,13 +1,14 @@
 module AccessGranted
   class Role
-    attr_reader :name, :user, :conditions, :permissions
+    attr_reader :name, :user, :conditions, :permissions, :scopes
 
     def initialize(name, conditions = nil, user = nil, block = nil)
       @user         = user
       @name         = name
       @conditions   = conditions
       @block        = block
-      @permissions  = []
+      @permissions = []
+      @scopes = []
 
       if @block
         instance_eval(&@block)
@@ -19,6 +20,10 @@ module AccessGranted
     def configure
     end
 
+    def scope(action, subject, conditions = {}, &block)
+      add_scope(action, subject, conditions, block)
+    end
+
     def can(action, subject = nil, conditions = {}, &block)
       add_permission(true, action, subject, conditions, block)
     end
@@ -27,11 +32,17 @@ module AccessGranted
       add_permission(false, action, subject, conditions, block)
     end
 
+    def find_scope(action, subject)
+      scopes.detect do |scope|
+        scope.action == action && scope.matches_subject?(subject)
+      end
+    end
+
     def find_permission(action, subject)
       permissions.detect do |permission|
         permission.action == action &&
-          permission.matches_subject?(subject) &&
-            permission.matches_conditions?(subject)
+          permission.matches_subject?(subject) && \
+          permission.matches_conditions?(subject)
       end
     end
 
@@ -52,6 +63,13 @@ module AccessGranted
       end
     end
 
+    def add_scope(action, subject, conditions, block)
+      prepare_actions(action).each do |a|
+        raise DuplicateScope if find_scope(a, subject)
+        scopes << Scope.new(a, subject, @user, conditions, block)
+      end
+    end
+
     def add_permission(granted, action, subject, conditions, block)
       prepare_actions(action).each do |a|
         raise DuplicatePermission if find_permission(a, subject)
@@ -61,7 +79,7 @@ module AccessGranted
 
     private
 
-    def permission_exists?(action, subject)
+    def permission_exists?(_action, subject)
       permissions.any? do |permission|
         permission.matches_subject?(subject)
       end
@@ -69,9 +87,9 @@ module AccessGranted
 
     def prepare_actions(action)
       if action == :manage
-        actions = [:read, :create, :update, :destroy]
+        [:read, :create, :update, :destroy]
       else
-        actions = Array(*[action])
+        Array(*[action])
       end
     end
   end

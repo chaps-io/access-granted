@@ -27,6 +27,14 @@ module AccessGranted
       r
     end
 
+    def resolve(action, subject = nil)
+      applicable_roles.each do |role|
+        scope = role.find_scope(action, subject)
+        return scope.apply_conditions(subject)
+      end
+      raise ScopeNotDefined
+    end
+
     def can?(action, subject = nil)
       cache[action] ||= {}
       cache[action][subject] ||= check_permission(action, subject)
