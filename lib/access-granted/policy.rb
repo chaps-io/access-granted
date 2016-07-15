@@ -30,7 +30,7 @@ module AccessGranted
     def resolve(action, subject = nil)
       applicable_roles.each do |role|
         scope = role.find_scope(action, subject)
-        return scope.apply_conditions(subject)
+        return scope.apply_conditions(subject) if scope
       end
       raise ScopeNotDefined
     end
