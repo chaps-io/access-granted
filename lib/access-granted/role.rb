@@ -8,7 +8,7 @@ module AccessGranted
       @conditions   = conditions
       @block        = block
       @permissions  = []
-      @permissions_by_action = {}
+
       if @block
         instance_eval(&@block)
       else
@@ -28,8 +28,10 @@ module AccessGranted
     end
 
     def find_permission(action, subject)
-      permissions_by_action(action).detect do |permission|
-        permission.matches_subject?(subject) && permission.matches_conditions?(subject)
+      permissions.detect do |permission|
+        permission.action == action &&
+          permission.matches_subject?(subject) &&
+            permission.matches_conditions?(subject)
       end
     end
 
@@ -52,17 +54,15 @@ module AccessGranted
 
     def add_permission(granted, action, subject, conditions, block)
       prepare_actions(action).each do |a|
-        raise DuplicatePermission if permission_exists?(a, subject)
-        @permissions << Permission.new(granted, a, subject, @user, conditions, block)
-        @permissions_by_action[a] ||= []
-        @permissions_by_action[a]  << @permissions.size - 1
+        raise DuplicatePermission if find_permission(a, subject)
+        permissions << Permission.new(granted, a, subject, @user, conditions, block)
       end
     end
 
     private
 
     def permission_exists?(action, subject)
-      permissions_by_action(action).any? do |permission|
+      permissions.any? do |permission|
         permission.matches_subject?(subject)
       end
     end
@@ -72,12 +72,6 @@ module AccessGranted
         actions = [:read, :create, :update, :destroy, :manage]
       else
         actions = Array(*[action])
-      end
-    end
-
-    def permissions_by_action(action)
-      (@permissions_by_action[action] || []).map do |index|
-        @permissions[index]
       end
     end
   end

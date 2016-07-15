@@ -6,16 +6,16 @@ describe AccessGranted::Policy do
 
   describe "#configure" do
     before :each do
-      @member = double("member",        id: 1, is_moderator: false, is_admin: false, is_banned: false)
-      @mod    = double("moderator",     id: 2, is_moderator: true,  is_admin: false, is_banned: false)
-      @admin  = double("administrator", id: 3, is_moderator: false, is_admin: true,  is_banned: false)
-      @banned = double("banned",        id: 4, is_moderator: false, is_admin: true,  is_banned: true)
+      @member = FakeUser.new(1, false, false, false)
+      @mod    = FakeUser.new(2, true, false, false)
+      @admin  = FakeUser.new(3, false, true, false)
+      @banned = FakeUser.new(4, false, true, true)
     end
 
     it "passes user object to permission block" do
       post_owner = double(id: 123)
       other_user = double(id: 5)
-      post = FakePost.new(post_owner.id)
+      post = FakePost.new(1, post_owner.id)
 
       klass = Class.new do
         include AccessGranted::Policy
@@ -81,8 +81,8 @@ describe AccessGranted::Policy do
 
     context "when multiple roles define the same permission" do
       it "checks all roles until conditions are met" do
-        user_post = FakePost.new(@member.id)
-        other_post = FakePost.new(66)
+        user_post = FakePost.new(1, @member.id)
+        other_post = FakePost.new(2, 66)
 
         klass = Class.new do
           include AccessGranted::Policy
@@ -138,7 +138,7 @@ describe AccessGranted::Policy do
           end
         end
         expect(klass.new(@member).can?(:create, String)).to    eq(true)
-        expect(klass.new(@banned).cannot?(:create, String)).to eq(true)
+        expect(klass.new(@banned).can?(:create, String)).to    eq(false)
       end
     end
 
