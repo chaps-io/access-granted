@@ -23,10 +23,12 @@ end
 
 require 'access-granted'
 
-class FakePost < Struct.new(:user_id)
+class FakeUser < Struct.new(:id, :is_moderator, :is_admin, :is_banned)
+end
+
+class FakePost < Struct.new(:id, :user_id)
 end
 
 class AccessPolicy
   include AccessGranted::Policy
 end
-
