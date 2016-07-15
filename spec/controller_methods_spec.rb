@@ -5,7 +5,7 @@ describe AccessGranted::Rails::ControllerMethods do
     @current_user = double("User")
     @controller_class = Class.new
     @controller = @controller_class.new
-    allow(@controller_class).to receive(:helper_method).with(:can?, :cannot?, :current_policy)
+    allow(@controller_class).to receive(:helper_method).with(:can?, :cannot?, :current_policy, :resolve)
     @controller_class.send(:include, AccessGranted::Rails::ControllerMethods)
     allow(@controller).to receive(:current_user).and_return(@current_user)
   end
