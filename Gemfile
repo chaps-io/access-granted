@@ -5,7 +5,6 @@ gemspec
 
 group :test, :development do
   gem 'rb-readline'
-  gem 'simplecov', require: false
   gem 'rake'
   gem 'pry'
   gem 'cancan'
