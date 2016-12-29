@@ -5,7 +5,10 @@ rvm:
   - 2.0
   - 2.1
   - 2.2
-  - rbx-2
-  - rbx
+  - 2.3
+  - 2.4
+  - rubinius-2
+  - rubinius-3
+  - rubinius
   - jruby-1
   - jruby
