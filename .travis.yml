@@ -5,10 +5,11 @@ rvm:
   - 2.0
   - 2.1
   - 2.2
-  - 2.3
-  - 2.4
-  - rubinius-2
-  - rubinius-3
-  - rubinius
+  - rbx
+  - rbx-2
   - jruby-1
   - jruby
+
+allow_failures:
+  - rvm: rbx
+  - rvm: rbx-2
