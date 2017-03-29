@@ -52,6 +52,10 @@ module AccessGranted
       subject
     end
 
+    def self.current_user(controller)
+      controller.current_user
+    end
+
     private
 
     def applicable_roles

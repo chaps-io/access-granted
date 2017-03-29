@@ -2,7 +2,7 @@ module AccessGranted
   module Rails
     module ControllerMethods
       def current_policy
-        @current_policy ||= ::AccessPolicy.new(current_user)
+        @current_policy ||= ::AccessPolicy.new( ::AccessPolicy.current_user(self) )
       end
 
       def self.included(base)
