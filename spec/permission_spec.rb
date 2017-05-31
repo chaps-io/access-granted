@@ -7,13 +7,13 @@ describe AccessGranted::Permission do
 
     it "matches proc conditions when true" do
       sub = double("Element", published?: true)
-      perm = subject.new(true, :read, sub, nil, {}, proc {true})
+      perm = subject.new(true, :read, sub, nil, {}, [], proc {true})
       expect(perm.matches_conditions?(sub)).to eq(true)
     end
 
     it "does not match proc conditions false" do
       sub = double("Element", published?: true)
-      perm = subject.new(true, :read, sub, nil, {}, proc {false})
+      perm = subject.new(true, :read, sub, nil, {}, [], proc {false})
       expect(perm.matches_conditions?(sub)).to eq(false)
     end
 
