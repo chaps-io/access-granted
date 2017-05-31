@@ -31,26 +31,26 @@ AccessGranted is meant as a replacement for CanCan to solve major problems:
 
 1. Performance
 
-  On average AccessGranted is **20 times faster** in resolving identical permissions and takes less memory.
-  See [benchmarks](https://github.com/chaps-io/access-granted/blob/master/benchmarks).
+    On average AccessGranted is **20 times faster** in resolving identical permissions and takes less memory.
+    See [benchmarks](https://github.com/chaps-io/access-granted/blob/master/benchmarks).
 
 2. Roles
 
-  Adds support for roles, so no more `if`s and `else`s in your Policy file. This makes it extremely easy to maintain and read the code.
+    Adds support for roles, so no more `if`s and `else`s in your Policy file. This makes it extremely easy to maintain and    read the code.
 
 3. Whitelists
 
-  This means that you define what the user can do, which results in clean, readable policies regardless of application complexity.
-  You don't have to worry about juggling `can`s and `cannot`s in a very convoluted way!
+    This means that you define what the user can do, which results in clean, readable policies regardless of application complexity.
+    You don't have to worry about juggling `can`s and `cannot`s in a very convoluted way!
 
-  _Note_: `cannot` is still available, but has a very specifc use. See [Usage](#usage) below.
+    _Note_: `cannot` is still available, but has a very specifc use. See [Usage](#usage) below.
 
 4. Framework agnostic
 
-  Permissions can work on basically any object and AccessGranted is framework-agnostic,
-  but it has Rails support out of the box. :)
-  It does not depend on any libraries, pure and clean Ruby code. Guaranteed to always work,
-  even when software around changes.
+    Permissions can work on basically any object and AccessGranted is framework-agnostic,
+    but it has Rails support out of the box. :)
+    It does not depend on any libraries, pure and clean Ruby code. Guaranteed to always work,
+    even when software around changes.
 
 ## Usage
 
