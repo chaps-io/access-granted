@@ -1,13 +1,14 @@
 module AccessGranted
   class Permission
-    attr_reader :action, :subject, :granted, :conditions, :block
+    attr_reader :action, :subject, :granted, :conditions, :actions, :block
 
-    def initialize(granted, action, subject, user = nil, conditions = {}, block = nil)
+    def initialize(granted, action, subject, user = nil, conditions = {}, actions = [], block = nil)
       @action     = action
       @user       = user
       @granted    = granted
       @subject    = subject
       @conditions = conditions
+      @actions    = actions
       @block      = block
     end
 

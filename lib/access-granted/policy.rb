@@ -29,16 +29,27 @@ module AccessGranted
 
     def can?(action, subject = nil)
       cache[action] ||= {}
-      cache[action][subject] ||= check_permission(action, subject)
+
+      if cache[action][subject]
+        cache[action][subject]
+      else
+        granted, actions = check_permission(action, subject)
+        actions.each do |a|
+          cache[a] ||= {}
+          cache[a][subject] ||= granted
+        end
+
+        granted
+      end
     end
 
     def check_permission(action, subject)
       applicable_roles.each do |role|
         permission = role.find_permission(action, subject)
-        return permission.granted if permission
+        return [permission.granted, permission.actions] if permission
       end
 
-      false
+      [false, []]
     end
 
     def cannot?(*args)

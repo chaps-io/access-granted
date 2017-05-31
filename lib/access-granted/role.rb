@@ -53,9 +53,10 @@ module AccessGranted
     end
 
     def add_permission(granted, action, subject, conditions, block)
-      prepare_actions(action).each do |a|
+      prepared_actions = prepare_actions(action)
+      prepared_actions.each do |a|
         raise DuplicatePermission, "Permission `#{a}` is already defined for #{subject} in role `#{name}`" if find_permission(a, subject)
-        permissions << Permission.new(granted, a, subject, @user, conditions, block)
+        permissions << Permission.new(granted, a, subject, @user, conditions, prepared_actions, block)
       end
     end
 
