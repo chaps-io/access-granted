@@ -3,7 +3,7 @@
 - Cache whole blocks of identical permissions when one of them is checked.
   For example, assuming we have a given permissions set:
 
-  ```
+  ```ruby
   can [:update, :destroy, :archive], Post do |post, user|
      post.user_id == user.id
   end
@@ -11,7 +11,7 @@
 
   When resolving one of them like this:
 
-  ```
+  ```ruby
   can? :update, @post
   ```
 
