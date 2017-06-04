@@ -37,4 +37,10 @@ class AccessPolicy
     #  can :read, Comment
     # end
   end
+
+  # # Sets the current_user retrieval method
+  # #
+  # def self.current_user(controller)
+  #   controller.current_user
+  # end
 end
