@@ -280,7 +280,7 @@ or with `cannot?`:
 
 ```ruby
 policy.cannot?(:create, Post) #=> false
-policy.cannot?(:update, @ost) #=> true
+policy.cannot?(:update, @post) #=> true
 ```
 
 ## Common examples
