@@ -136,7 +136,11 @@ describe AccessGranted::Policy do
       end
 
       it "raises AccessDenied if action is not allowed" do
-        expect { klass.new(@member).authorize!(:create, Integer) }.to raise_error AccessGranted::AccessDenied
+        expect { klass.new(@member).authorize!(:create, Integer) }.to raise_error do |err|
+          expect(err).to be_a(AccessGranted::AccessDenied)
+          expect(err.action).to eq(:create)
+          expect(err.subject).to eq(Integer)
+        end
       end
 
       it "returns the subject if allowed" do

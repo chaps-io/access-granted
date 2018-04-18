@@ -21,7 +21,11 @@ describe AccessGranted::Rails::ControllerMethods do
 
   describe "#authorize!" do
     it "raises exception when authorization fails" do
-      expect { @controller.authorize!(:read, String) }.to raise_error(AccessGranted::AccessDenied)
+      expect { @controller.authorize!(:read, String) }.to raise_error do |err|
+        expect(err).to be_a(AccessGranted::AccessDenied)
+        expect(err.action).to eq(:read)
+        expect(err.subject).to eq(String)
+      end
     end
 
     it "returns subject if authorization succeeds" do

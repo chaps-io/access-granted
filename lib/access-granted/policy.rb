@@ -58,7 +58,7 @@ module AccessGranted
 
     def authorize!(action, subject)
       if cannot?(action, subject)
-        raise AccessDenied
+        raise AccessDenied.new(action, subject)
       end
       subject
     end
