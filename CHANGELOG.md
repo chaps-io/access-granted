@@ -1,3 +1,9 @@
+# 1.3.0
+
+- Drop support for Ruby 1.9.3, it might still work but we are no longer testing against it.
+- Start testing against Rubies 2.3-2.5 in CI
+- Move Rails integration into Railties, this fixes some load order issues ([PR #45](https://github.com/chaps-io/access-granted/pull/45)), thanks [jraqula](https://github.com/jraqula)!
+
 # 1.2.0
 
 - Cache whole blocks of identical permissions when one of them is checked.
