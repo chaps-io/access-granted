@@ -1,4 +1,5 @@
 # AccessGranted [![Build Status](https://travis-ci.org/chaps-io/access-granted.svg?branch=master)](https://travis-ci.org/chaps-io/access-granted) [![Code Climate](https://codeclimate.com/github/pokonski/access-granted.png)](https://codeclimate.com/github/pokonski/access-granted)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fchaps-io%2Faccess-granted.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fchaps-io%2Faccess-granted?ref=badge_shield)
 
 ## [![](http://i.imgur.com/ya8Wnyl.png)](https://chaps.io) proudly made by [Chaps](https://chaps.io)
 
@@ -349,3 +350,7 @@ This gem has been created as a replacement for CanCan and therefore it requires 
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new pull request
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fchaps-io%2Faccess-granted.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fchaps-io%2Faccess-granted?ref=badge_large)
