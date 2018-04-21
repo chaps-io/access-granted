@@ -210,6 +210,26 @@ class ApplicationController < ActionController::Base
 end
 ```
 
+You can also extract the action and subject which raised the error,
+if you want to handle authorization errors differently for some cases:
+```ruby
+  rescue_from "AccessGranted::AccessDenied" do |exception|
+    status = case exception.action
+      when :read # invocation like `authorize! :read, @something`
+        403
+      else
+        404
+      end
+
+    body = case exception.subject
+      when Post # invocation like `authorize! @some_action, Post`
+        "failed to access a post"
+      else
+        "failed to access something else"
+      end
+  end
+```
+
 #### Checking permissions in controllers
 
 To check if the user has a permission to perform an action, use the `can?` and `cannot?` methods.
