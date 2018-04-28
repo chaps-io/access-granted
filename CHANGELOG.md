@@ -1,3 +1,7 @@
+# 1.3.1
+
+- Add information about action and subject when raising AccessDenied exception ([PR #45](https://github.com/chaps-io/access-granted/pull/46)), thanks [jraqula](https://github.com/jraqula)!
+
 # 1.3.0
 
 - Drop support for Ruby 1.9.3, it might still work but we are no longer testing against it.
