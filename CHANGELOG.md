@@ -1,3 +1,7 @@
+# 1.3.2
+
+- Expose `applicable_roles` method on the policy instance. This allows insight into what roles actually apply to a given user.
+
 # 1.3.1
 
 - Add information about action and subject when raising AccessDenied exception ([PR #46](https://github.com/chaps-io/access-granted/pull/46)), thanks [jraqula](https://github.com/jraqula)!

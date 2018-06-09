@@ -63,8 +63,6 @@ module AccessGranted
       subject
     end
 
-    private
-
     def applicable_roles
       @applicable_roles ||= roles.select do |role|
         role.applies_to?(user)

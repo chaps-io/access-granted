@@ -188,8 +188,9 @@ describe AccessGranted::Policy do
     end
   end
 
-  describe "#matching_roles" do
+  describe "#applicable_roles" do
     let(:user) { double("User", is_moderator: true, is_admin: true) }
+    subject(:policy) { klass.new(user) }
 
     before do
       policy.role(:administrator, { is_admin:     true })
@@ -197,9 +198,17 @@ describe AccessGranted::Policy do
       policy.role(:member)
     end
 
-    shared_examples 'role matcher' do
+    context "user matches all roles" do
       it "returns all matching roles in the order of priority" do
-        expect(subject.map(&:name)).to eq([:administrator, :moderator, :member])
+        expect(policy.applicable_roles.map(&:name)).to eq([:administrator, :moderator, :member])
+      end
+    end
+
+    context "user is just an admin" do
+      let(:user) { double("User", is_moderator: false, is_admin: true) }
+
+      it 'returns array with admin and member roles' do
+        expect(policy.applicable_roles.map(&:name)).to eq([:administrator, :member])
       end
     end
   end
