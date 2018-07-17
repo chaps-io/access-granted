@@ -70,7 +70,7 @@ module AccessGranted
 
     def prepare_actions(action)
       actions = Array(*[action])
-      actions.map { |a| a == :manage ? [:create, :read, :update, :destroy ] : [a] }.flatten
+      actions.flat_map { |a| a == :manage ? [:create, :read, :update, :destroy ] : [a] }
     end
   end
 end
