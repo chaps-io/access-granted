@@ -143,6 +143,16 @@ describe AccessGranted::Policy do
         end
       end
 
+      it "raises AccessDenied with supplied message if action is not allowed" do
+        message = 'You are not allowed to create Integer'
+        expect { klass.new(@member).authorize!(:create, Integer, message) }.to raise_error do |err|
+          expect(err).to be_a(AccessGranted::AccessDenied)
+          expect(err.action).to eq(:create)
+          expect(err.subject).to eq(Integer)
+          expect(err.message).to eq(message)
+        end
+      end
+
       it "returns the subject if allowed" do
         expect(klass.new(@member).authorize!(:create, String)).to equal String
       end

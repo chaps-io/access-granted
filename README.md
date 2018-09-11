@@ -232,6 +232,21 @@ if you want to handle authorization errors differently for some cases:
   end
 ```
 
+You can also have a custom exception message while authorizing a request.
+This message will be associated with the exception object thrown.
+
+```ruby
+class PostsController
+  def show
+    @post = Post.find(params[:id])
+    authorize! :read, @post, 'You do not have access to this post'
+    render json: { post: @post }
+  rescue AccessGranted::AccessDenied => e
+    render json: { error: e.message }, status: :forbidden
+  end
+end
+```
+
 #### Checking permissions in controllers
 
 To check if the user has a permission to perform an action, use the `can?` and `cannot?` methods.
