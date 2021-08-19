@@ -1,6 +1,6 @@
 # 1.3.3
 
-- Fix compatibility with Rails 6.0 and Zeitwerk ([PR #53](https://github.com/chaps-io/access-granted/pull/53)), thanks [jraqula](https://github.com/dmorehouse)!
+- Fix compatibility with Rails 6.0 and Zeitwerk ([PR #53](https://github.com/chaps-io/access-granted/pull/53)), thanks [dmorehouse](https://github.com/dmorehouse)!
 
 # 1.3.2
 
