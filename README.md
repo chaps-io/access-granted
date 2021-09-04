@@ -1,8 +1,5 @@
 # AccessGranted [![Build Status](https://travis-ci.org/chaps-io/access-granted.svg?branch=master)](https://travis-ci.org/chaps-io/access-granted) [![Code Climate](https://codeclimate.com/github/pokonski/access-granted.png)](https://codeclimate.com/github/pokonski/access-granted)
 
-## [![](http://i.imgur.com/ya8Wnyl.png)](https://chaps.io) proudly made by [Chaps](https://chaps.io)
-
-
 AccessGranted is a multi-role and whitelist based authorization gem for Rails. And it's lightweight (~300 lines of code)!
 
 
@@ -75,7 +72,6 @@ class AccessPolicy
 
   def configure
     # The most important admin role, gets checked first
-
     role :admin, { is_admin: true } do
       can :manage, Post
       can :manage, Comment
@@ -115,8 +111,8 @@ end
 
 This role will allow everyone (since we didn't supply a matcher) to read and create posts.
 
-But now we want to let admins delete those posts (for example spam posts).
-In this case we create a new role above the `:member` to add more permissions for the admin:
+But now we want to let admins delete those posts.
+In this case we can create a new role above the `:member` to add more permissions for the admin:
 
 ```ruby
 role :admin, { is_admin: true } do
@@ -158,7 +154,7 @@ role :member do
 end
 ```
 
-When the given block evaluates to `true`, then `user` is given the permission to update the post.
+When the given block evaluates to `true`, then `user` is allowed to update the post.
 
 #### Roles in order of importance
 
@@ -337,7 +333,7 @@ class AccessPolicy
       can :manage, User
     end
 
-    role :member, MemberRole, lambda { |user| !u.guest? }
+    role :member, MemberRole, -> { |user| !u.guest? }
   end
 end
 
@@ -371,7 +367,7 @@ This gem has been created as a replacement for CanCan and therefore it requires 
 
 2. Both `can?`/`cannot?` and `authorize!` methods work in Rails controllers and views, just like in CanCan.
    The only change you have to make is to replace all `can? :manage, Class` with the exact action to check against.
-   `can :manage` is still available for **defining** methods and serves as a shortcut for defining `:create`, `:read`, `:update`, `:destroy` all in one line.
+   `can :manage` is still available for **defining** permissions and serves as a shortcut for defining `:create`, `:read`, `:update`, `:destroy` all in one line.
 
 3. Syntax for defining permissions in the AccessPolicy file (Ability in CanCan) is exactly the same,
    with roles added on top. See [Usage](#usage) above.
