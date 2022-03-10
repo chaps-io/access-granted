@@ -10,7 +10,3 @@ group :test, :development do
   gem 'cancan'
   gem 'benchmark-ips'
 end
-
-platforms :rbx do
-  gem 'rubysl', '~> 2.1'
-end
