@@ -22,7 +22,8 @@ config.autoload_paths += %W(#{config.root}/app/policies #{config.root}/app/roles
 
 ### Supported Ruby versions
 
-Because it has **zero** runtime dependencies it is guaranteed to work on all major Ruby versions MRI `2.0` - `2.5`, Rubinius `>= 2.X` and JRuby `>= 1.7`.
+Because it has **zero** runtime dependencies it is guaranteed to work on all supported MRI Ruby versions, see CI to check the up to date list.
+It might and probably is working on Rubinius and JRuby but we are no longer testing against those.
 
 ## Summary
 
