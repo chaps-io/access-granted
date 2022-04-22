@@ -59,7 +59,7 @@ Roles are defined using blocks (or by passing custom classes to keep things tidy
 **Order of the roles is VERY important**, because they are being traversed in top-to-bottom order.
 At the top you must have an admin or some other important role giving the user top permissions, and as you go down you define less-privileged roles.
 
-**I recommend starting your adventure by reading my [blog post about AccessGranted](http://blog.chaps.io/2015/11/13/role-based-authorization-in-rails.html), where I demonstrate its abilities on a real life example.**
+**I recommend starting your adventure by reading the [wiki page on how to start with Access Granted](https://github.com/chaps-io/access-granted/wiki/Role-based-authorization-in-Rails), where I demonstrate its abilities on a real life example.**
 
 ### Defining an access policy
 
