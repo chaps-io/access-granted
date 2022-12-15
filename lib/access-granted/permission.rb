@@ -17,7 +17,9 @@ module AccessGranted
     end
 
     def matches_subject?(subject)
-      subject == @subject || subject.class <= @subject
+      subject == @subject ||
+      (subject.is_a?(Class) && @subject.is_a?(Class) && subject <= @subject) ||
+      subject.class <= @subject
     end
 
     def matches_conditions?(subject)

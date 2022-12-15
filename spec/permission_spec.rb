@@ -49,6 +49,11 @@ describe AccessGranted::Permission do
       expect(perm.matches_subject? String).to eq(true)
     end
 
+    it "matches if superclass of class object is equal to subject" do
+      perm = subject.new(true, :read, Exception)
+      expect(perm.matches_subject? StandardError).to eq(true)
+    end
+
     it "matches if class is equal to subject" do
       perm = subject.new(true, :read, String)
       expect(perm.matches_subject? "test").to eq(true)
