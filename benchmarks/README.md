@@ -1,6 +1,6 @@
 # Benchmark results
 
-Benchmarks ran on Ubuntu 17.04 64bit, i7 6700k @ 4.0Ghz, 32 GB RAM with Ruby 2.3.
+Benchmarks ran on MacBook Pro M1 Pro 2021, 32 GB RAM on Ruby 3.2.
 
 ## permissions.rb
 
