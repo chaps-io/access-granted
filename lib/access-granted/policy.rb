@@ -7,7 +7,6 @@ module AccessGranted
       @user          = user
       @roles         = []
       @cache         = {}
-      configure
     end
 
     def configure
