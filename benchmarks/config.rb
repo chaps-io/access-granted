@@ -15,7 +15,7 @@ class Ability
     can :read, String
     can :zoom, Integer
     can :boom, Hash
-    can :rub, Fixnum
+    can :rub, File
   end
 end
 
@@ -37,7 +37,7 @@ class AccessPolicy
       can :read, String
       can :zoom, Integer
       can :boom, Hash
-      can :rub, Fixnum
+      can :rub, File
     end
   end
 end
